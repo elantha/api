@@ -1,5 +1,6 @@
 {
     "name": "grizmar/api",
+    "type": "laravel-library",
     "description": "rest api",
     "authors": [
         {
