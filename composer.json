@@ -1,7 +1,9 @@
 {
     "name": "grizmar/api",
-    "config": {
-        "vendor-dir": "packages"
+    "extra": {
+        "installer-paths": {
+            "packages/{$name}": ["vendor/package"]
+        }
     },
     "description": "rest api",
     "authors": [
