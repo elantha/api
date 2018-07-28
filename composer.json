@@ -1,11 +1,17 @@
 {
     "name": "grizmar/spotlight",
     "description": "rest api",
+    "version": "0.0.0",
     "authors": [
         {
             "name": "grizmar",
             "email": "grizmar5@gmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Grizmar\\Api\\": "src/"
+        }
+    }
 }
