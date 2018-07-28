@@ -2,7 +2,7 @@
     "name": "grizmar/api",
     "extra": {
         "installer-paths": {
-            "packages/{$name}": ["vendor/package"]
+            "packages/{$name}": ["grizmar/api"]
         }
     },
     "description": "rest api",
