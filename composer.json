@@ -1,6 +1,8 @@
 {
     "name": "grizmar/api",
-    "type": "laravel-library",
+    "config": {
+        "vendor-dir": "packages"
+    },
     "description": "rest api",
     "authors": [
         {
