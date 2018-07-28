@@ -1,5 +1,10 @@
 {
-    "name": "grizmar/spotlight",
+    "name": "grizmar/api",
+    "extra": {
+        "installer-paths": {
+            "packages/{$name}": ["grizmar/api"]
+        }
+    },
     "description": "rest api",
     "authors": [
         {
