@@ -1,0 +1,11 @@
+{
+    "name": "grizmar/spotlight",
+    "description": "rest api",
+    "authors": [
+        {
+            "name": "grizmar",
+            "email": "grizmar5@gmail.com"
+        }
+    ],
+    "require": {}
+}
