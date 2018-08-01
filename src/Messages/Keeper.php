@@ -3,19 +3,21 @@
 namespace Grizmar\Api\Messages;
 
 
-class Manager
+class Keeper
 {
     private static $baseCollection = [];
     private static $logCollection = [];
 
-    public static function load(BaseCollection $collection): void
+    public static function load(BaseCollection $collection, $isLog = false): void
     {
-        self::boot(self::$baseCollection, $collection);
-    }
+        $collection->init();
 
-    public static function loadLogCollection(BaseCollection $collection): void
-    {
-        self::boot(self::$logCollection, $collection);
+        $messages = $collection->getMessages();
+
+        if ($isLog)
+            self::$logCollection = $messages + self::$logCollection;
+        else
+            self::$baseCollection = $messages + self::$baseCollection;
     }
 
     public static function getMessage($code, array $context = []): string
@@ -32,13 +34,6 @@ class Manager
         }
 
         return $message;
-    }
-
-    private static function boot(array &$currentCollection, BaseCollection $collection): void
-    {
-        $collection->init();
-
-        $currentCollection = $collection->getMessages() + $currentCollection;
     }
 
     private static function getDirectMessage($collection, $code, array $context = []): string

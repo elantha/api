@@ -2,7 +2,7 @@
 
 namespace Grizmar\Api\Exceptions;
 
-use Grizmar\Api\Messages\Manager;
+use Grizmar\Api\Messages\Keeper;
 use Grizmar\Api\Response\ContentInterface;
 
 abstract class BaseException extends \Exception
@@ -11,7 +11,7 @@ abstract class BaseException extends \Exception
 
     public static function make($code = 0, array $context = []): self
     {
-        $message = Manager::getMessage($code, $context);
+        $message = Keeper::getMessage($code, $context);
 
         // TODO: log error
 
