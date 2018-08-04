@@ -7,7 +7,6 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Grizmar\Api\Response\ContentInterface;
 use Grizmar\Api\Validators\RequestValidator;
 
@@ -23,21 +22,9 @@ class BaseController extends Controller
         $this->response = $response;
         $this->request = $request;
 
-        $this->initializeValidationRules();
+        $this->initValidationRules();
 
-        // TODO: перенести в обработчик ошибок
-        try{
-            $this->validate($request, $this->validationRules);
-        } catch(ValidationException $e) {
-            $errors = $e->validator->errors()->getMessages();
-
-            foreach($errors as $fieldName => $fieldMessages)
-            {
-                $this->response->setValidationErrors($fieldName, $fieldMessages);
-            }
-
-            $this->response->setStatusCode($e->status);
-        }
+        $this->validate($request, $this->validationRules);
     }
 
     final protected function hasErrors(): bool
@@ -50,13 +37,7 @@ class BaseController extends Controller
         return $this->request->input($key, $default);
     }
 
-    // TODO: подумать как задавать общие для всех контроллеров правила валидации
-    protected function initializeValidationRules(): self
+    protected function initValidationRules(): self
     {
-        $this->validationRules = [
-
-        ];
-
-        return $this;
     }
 }

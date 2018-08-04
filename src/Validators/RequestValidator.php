@@ -8,7 +8,7 @@ trait RequestValidator
 {
     private $validationRules = [];
 
-    abstract  protected function initializeValidationRules(): self;
+    abstract protected function initValidationRules(): self;
 
     final protected function setValidationRules(array $rules): self
     {
