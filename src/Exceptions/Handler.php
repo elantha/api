@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Grizmar\Api\Response\ContentInterface;
+use Grizmar\Api\Log\Logger;
 
 class Handler
 {
@@ -18,6 +19,8 @@ class Handler
         } else {
             $response = static::getInternalErrorResponse();
         }
+
+        self::addToLog($e);
 
         return response()->rest($response);
     }
@@ -57,5 +60,18 @@ class Handler
         $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
 
         return $response;
+    }
+
+    protected static function addToLog(\Exception $e): void
+    {
+        if (config('api.log', false)) {
+
+            $context = [
+                'exception_code' => $e->getCode(),
+                'exception_text' => $e->getMessage(),
+            ];
+
+            resolve(Logger::class)->addContext($context);
+        }
     }
 }

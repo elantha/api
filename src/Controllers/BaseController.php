@@ -2,6 +2,7 @@
 
 namespace Grizmar\Api\Controllers;
 
+use Grizmar\Api\Log\Logger;
 use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -16,11 +17,17 @@ class BaseController extends Controller
 
     protected $response;
     protected $request;
+    protected $logger;
 
-    final public function __construct(Request $request, ContentInterface $response)
+    final public function __construct(Request $request, ContentInterface $response, Logger $logger)
     {
         $this->response = $response;
         $this->request = $request;
+        $this->logger = $logger;
+
+        if (config('api.log', false)) {
+            $this->logRequest();
+        }
 
         $this->initValidationRules();
 
@@ -39,5 +46,10 @@ class BaseController extends Controller
 
     protected function initValidationRules(): self
     {
+    }
+
+    protected function logRequest(): void
+    {
+        $this->logger->request($this->request);
     }
 }
