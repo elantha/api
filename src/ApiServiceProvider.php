@@ -8,8 +8,11 @@ use Illuminate\Support\ServiceProvider;
 use Grizmar\Api\Response\ContentInterface;
 use Grizmar\Api\Response\JsonResponse;
 use Grizmar\Api\Response\XmlResponse;
+use Grizmar\Api\Log\LoggerInterface;
 use Grizmar\Api\Log\Logger;
 use Grizmar\Api\Log\AccessLogger;
+use Grizmar\Api\Messages\KeeperInterface;
+use Grizmar\Api\Messages\Keeper;
 
 class ApiServiceProvider extends ServiceProvider
 {
@@ -31,6 +34,8 @@ class ApiServiceProvider extends ServiceProvider
         $this->bindResponse($request);
 
         $this->bindLogger();
+        
+        $this->bindMessageKeeper();
 
         Response::macro('rest', function ($data, $status = false) {
 
@@ -45,10 +50,8 @@ class ApiServiceProvider extends ServiceProvider
             if ($status) {
                 $response->setStatusCode($status);
             }
-            
-            if (config('api.log', false)) {
-                resolve(Logger::class)->answer($response);
-            }
+
+            resolve(LoggerInterface::class)->answer($response);
 
             return $response->getAnswer();
         });
@@ -84,11 +87,16 @@ class ApiServiceProvider extends ServiceProvider
 
     private function bindLogger()
     {
-        $this->app->singleton(Logger::class, function ($app) {
+        $this->app->singleton(LoggerInterface::class, function ($app) {
 
             $handler = config('api.logger_handler', AccessLogger::class);
 
             return new Logger(new $handler('api'));
         });
+    }
+
+    private function bindMessageKeeper()
+    {
+        $this->app->singleton(KeeperInterface::class, Keeper::class);
     }
 }

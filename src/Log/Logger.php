@@ -6,7 +6,7 @@ use Grizmar\Api\Response\ContentInterface;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Monolog\Logger as MonologLogger;
-use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerInterface as PsrLoggerInterface;
 
 class Logger implements LoggerInterface
 {
@@ -15,74 +15,84 @@ class Logger implements LoggerInterface
     private $handler;
 
     private $context = [
-        'exception_code' => '',
-        'exception_text' => '',
+        'internal_code' => '',
+        'internal_text' => '',
     ];
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(PsrLoggerInterface $logger)
     {
         $this->handler = $logger;
     }
 
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
-        $context = array_replace_recursive($this->getContext(), $context);
-        
-        return $this->handler->log($level, $message, $context);
+        if (config('api.log', false)) {
+
+            $context = array_replace_recursive($this->getContext(), $context);
+
+            return $this->handler->log($level, $message, $context);
+        }
+
+        return false;
     }
 
-    public function emergency($message, array $context = array())
+    public function emergency($message, array $context = [])
     {
         return $this->log(MonologLogger::EMERGENCY, $message, $context);
     }
 
-    public function alert($message, array $context = array())
+    public function alert($message, array $context = [])
     {
         return $this->log(MonologLogger::ALERT, $message, $context);
     }
 
-    public function critical($message, array $context = array())
+    public function critical($message, array $context = [])
     {
         return $this->log(MonologLogger::CRITICAL, $message, $context);
     }
 
-    public function error($message, array $context = array())
+    public function error($message, array $context = [])
     {
         return $this->log(MonologLogger::ERROR, $message, $context);
     }
 
-    public function warning($message, array $context = array())
+    public function warning($message, array $context = [])
     {
         return $this->log(MonologLogger::WARNING, $message, $context);
     }
 
-    public function notice($message, array $context = array())
+    public function notice($message, array $context = [])
     {
         return $this->log(MonologLogger::NOTICE, $message, $context);
     }
 
-    public function info($message, array $context = array())
+    public function info($message, array $context = [])
     {
         return $this->log(MonologLogger::INFO, $message, $context);
     }
 
-    public function debug($message, array $context = array())
+    public function debug($message, array $context = [])
     {
         return $this->log(MonologLogger::DEBUG, $message, $context);
     }
 
-    public function addContext(array $context = []): self
+    public function addContext(array $context = []): LoggerInterface
     {
         $this->context = array_replace_recursive($this->context, $context);
 
         return $this;
     }
 
-    public function setContextParam($name, $value): self
+    public function setContextParam($name, $value): LoggerInterface
     {
         array_set($this->context, $name, $value);
 
         return $this;
+    }
+
+    public function internal(string $text): LoggerInterface
+    {
+        return $this->setContextParam('internal_text', $text);
     }
 
     public function request(Request $request): void
@@ -114,12 +124,12 @@ class Logger implements LoggerInterface
         $this->log($level, config('api.answer_format', ''), $localContext);
     }
 
-    protected function getContext(): array
+    public function getContext(): array
     {
         return $this->context;
     }
 
-    protected function getContextParam($name, $default = null)
+    public function getContextParam($name, $default = null)
     {
         return array_get($this->getContext(), $name, $default);
     }

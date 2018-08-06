@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Grizmar\Api\Response\ContentInterface;
-use Grizmar\Api\Log\Logger;
+use Grizmar\Api\Log\LoggerInterface;
 
 class Handler
 {
@@ -18,9 +18,9 @@ class Handler
             $response = static::getValidationErrorResponse($e);
         } else {
             $response = static::getInternalErrorResponse();
-        }
 
-        self::addToLog($e);
+            self::log($e);
+        }
 
         return response()->rest($response);
     }
@@ -62,16 +62,12 @@ class Handler
         return $response;
     }
 
-    protected static function addToLog(\Exception $e): void
+    protected static function log(\Exception $e): void
     {
-        if (config('api.log', false)) {
-
-            $context = [
-                'exception_code' => $e->getCode(),
-                'exception_text' => $e->getMessage(),
-            ];
-
-            resolve(Logger::class)->addContext($context);
-        }
+        resolve(LoggerInterface::class)
+            ->addContext([
+                'internal_code' => $e->getCode(),
+                'internal_text' => $e->getMessage(),
+            ]);
     }
 }

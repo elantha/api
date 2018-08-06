@@ -20,5 +20,5 @@ return [
 
     'request_format' => '{unique_id}][request][{method}][{url}][{body}',
 
-    'answer_format' => '{unique_id}][answer][{method}][{url}][{body}][{exception_text}',
+    'answer_format' => '{unique_id}][answer][{method}][{url}][{body}][{internal_text}',
 ];

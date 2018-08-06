@@ -3,47 +3,27 @@
 namespace Grizmar\Api\Messages;
 
 
-class Keeper
+class Keeper implements KeeperInterface
 {
-    private static $baseCollection = [];
-    private static $logCollection = [];
+    private $messages = [];
 
-    public static function load(BaseCollection $collection, $isLog = false): void
+    public function load(BaseCollection $collection): KeeperInterface
     {
         $collection->init();
 
-        $messages = $collection->getMessages();
+        $this->messages = $collection->getMessages() + $this->messages;
 
-        if ($isLog)
-            self::$logCollection = $messages + self::$logCollection;
-        else
-            self::$baseCollection = $messages + self::$baseCollection;
+        return $this;
     }
 
-    public static function getMessage($code, array $context = []): string
-    {
-        return self::getDirectMessage(self::$baseCollection, $code, $context);
-    }
-
-    public static function getLogMessage($code, array $context = []): string
-    {
-        $message = self::getDirectMessage(self::$logCollection, $code, $context);
-
-        if (empty($message)) {
-            self::getMessage(self::$logCollection, $code, $context);
-        }
-
-        return $message;
-    }
-
-    private static function getDirectMessage($collection, $code, array $context = []): string
+    public function getMessage($code, array $context = [])
     {
         $result = '';
 
-        $message = array_get($collection, $code);
+        $message = array_get($this->messages, $code);
 
         if (empty($message)) {
-            $message = array_get($collection, 'default');
+            $message = array_get($this->messages, 'default');
         }
 
         if ($message instanceof Message) {
