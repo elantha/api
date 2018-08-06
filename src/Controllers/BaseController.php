@@ -53,4 +53,9 @@ class BaseController extends Controller
     {
         $this->logger->request($this->request);
     }
+
+    protected function log($level, string $message, array $context = [])
+    {
+        return $this->logger->log($level, $message, $context);
+    }
 }
