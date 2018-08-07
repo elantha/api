@@ -16,10 +16,6 @@ use Illuminate\Support\Str;
 
 class ApiServiceProvider extends ServiceProvider
 {
-    // TODO: вынести константы из провайдера
-    public const CONTENT_TYPE_JSON = 'application/json';
-    public const CONTENT_TYPE_XML = 'application/xml';
-
     /**
      * Bootstrap the application services.
      *

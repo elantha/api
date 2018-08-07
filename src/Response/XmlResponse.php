@@ -2,12 +2,13 @@
 
 namespace Grizmar\Api\Response;
 
-use Grizmar\Api\ApiServiceProvider;
 
 class XmlResponse extends BaseResponse
 {
+    public const CONTENT_TYPE = 'application/xml';
+
     public function __construct()
     {
-        $this->header('Content-Type', ApiServiceProvider::CONTENT_TYPE_XML);
+        $this->header('Content-Type', static::CONTENT_TYPE);
     }
 }
