@@ -40,9 +40,16 @@ class BaseResponse implements ContentInterface
         return $this;
     }
 
-    final public function addError(int $code, string $message): self
+    final public function addError($code, string $message): self
     {
         $this->errors[$code] = $message;
+
+        return $this;
+    }
+
+    final public function addErrors($code, array $messages): self
+    {
+        $this->errors[$code] = $messages;
 
         return $this;
     }
