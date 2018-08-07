@@ -7,12 +7,12 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 use Grizmar\Api\Response\ContentInterface;
 use Grizmar\Api\Response\JsonResponse;
-use Grizmar\Api\Response\XmlResponse;
 use Grizmar\Api\Log\LoggerInterface;
 use Grizmar\Api\Log\Logger;
 use Grizmar\Api\Log\AccessLogger;
 use Grizmar\Api\Messages\KeeperInterface;
 use Grizmar\Api\Messages\Keeper;
+use Illuminate\Support\Str;
 
 class ApiServiceProvider extends ServiceProvider
 {
@@ -53,17 +53,23 @@ class ApiServiceProvider extends ServiceProvider
 
     private function bindResponse(Request $request): void
     {
-        $contentType = $request->header('Content-type') ?: self::CONTENT_TYPE_JSON;
+        $responseClass = false;
 
-        switch($contentType) {
-            case self::CONTENT_TYPE_JSON:
-                $responseClass = JsonResponse::class;
-                break;
-            case self::CONTENT_TYPE_XML:
-                $responseClass = XmlResponse::class;
-                break;
-            default:
-                $responseClass = JsonResponse::class;
+        $types = (array) config('api.response_types', []);
+
+        $contentType = $request->header('Content-type');
+
+        if (!empty($contentType)) {
+            foreach ($types as $type => $handler) {
+                if (Str::is($type, $contentType)) {
+                    $responseClass = $handler;
+                    break;
+                }
+            }
+        }
+
+        if (!$responseClass) {
+            $responseClass = $types['default'] ?? JsonResponse::class;
         }
 
         $this->app->bind(ContentInterface::class, $responseClass);
