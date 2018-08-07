@@ -17,11 +17,17 @@ interface ContentInterface
 
     public function getStatusCode(): int;
 
+    public function header(string $name, $value): self;
+
+    public function withHeaders(array $headers): self;
+
     public function hasErrors(): bool;
 
     public function getErrors(): array;
 
-    public function addError(int $code, string $message);
+    public function addError($code, string $message);
+
+    public function addErrors($code, array $messages);
 
     public function addValidationError(string $code, string $message);
 

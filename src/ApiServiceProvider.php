@@ -7,18 +7,15 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
 use Grizmar\Api\Response\ContentInterface;
 use Grizmar\Api\Response\JsonResponse;
-use Grizmar\Api\Response\XmlResponse;
 use Grizmar\Api\Log\LoggerInterface;
 use Grizmar\Api\Log\Logger;
 use Grizmar\Api\Log\AccessLogger;
 use Grizmar\Api\Messages\KeeperInterface;
 use Grizmar\Api\Messages\Keeper;
+use Illuminate\Support\Str;
 
 class ApiServiceProvider extends ServiceProvider
 {
-    public const CONTENT_TYPE_JSON = 'application/json';
-    public const CONTENT_TYPE_XML = 'application/xml';
-
     /**
      * Bootstrap the application services.
      *
@@ -37,24 +34,7 @@ class ApiServiceProvider extends ServiceProvider
         
         $this->bindMessageKeeper();
 
-        Response::macro('rest', function ($data, $status = false) {
-
-            if ($data instanceof ContentInterface) {
-                $response = $data;
-            }
-            else {
-                $response = resolve(ContentInterface::class);
-                $response->setData($data);
-            }
-
-            if ($status) {
-                $response->setStatusCode($status);
-            }
-
-            resolve(LoggerInterface::class)->answer($response);
-
-            return $response->getAnswer();
-        });
+        $this->responseMacro();
     }
 
     /**
@@ -69,17 +49,23 @@ class ApiServiceProvider extends ServiceProvider
 
     private function bindResponse(Request $request): void
     {
-        $contentType = $request->header('Content-type') ?: self::CONTENT_TYPE_JSON;
+        $responseClass = false;
 
-        switch($contentType) {
-            case self::CONTENT_TYPE_JSON:
-                $responseClass = JsonResponse::class;
-                break;
-            case self::CONTENT_TYPE_XML:
-                $responseClass = XmlResponse::class;
-                break;
-            default:
-                $responseClass = JsonResponse::class;
+        $types = (array) config('api.response_types', []);
+
+        $contentType = $request->header('Content-type');
+
+        if (!empty($contentType)) {
+            foreach ($types as $type => $handler) {
+                if (Str::is($type, $contentType)) {
+                    $responseClass = $handler;
+                    break;
+                }
+            }
+        }
+
+        if (!$responseClass) {
+            $responseClass = $types['default'] ?? JsonResponse::class;
         }
 
         $this->app->bind(ContentInterface::class, $responseClass);
@@ -98,5 +84,27 @@ class ApiServiceProvider extends ServiceProvider
     private function bindMessageKeeper()
     {
         $this->app->singleton(KeeperInterface::class, Keeper::class);
+    }
+
+    private function responseMacro()
+    {
+        Response::macro('rest', function ($data, $status = false) {
+
+            if ($data instanceof ContentInterface) {
+                $response = $data;
+            }
+            else {
+                $response = resolve(ContentInterface::class);
+                $response->setData($data);
+            }
+
+            if ($status) {
+                $response->setStatusCode($status);
+            }
+
+            resolve(LoggerInterface::class)->answer($response);
+
+            return $response->getAnswer();
+        });
     }
 }

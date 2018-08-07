@@ -4,6 +4,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Response Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Response types as 'Content-Type' => Response type handler
+    | Response handler must implement \Grizmar\Api\Response\ContentInterface
+    */
+
+    'response_types' => [
+        'application/xml' => \Grizmar\Api\Response\XmlResponse::class,
+        'default' => \Grizmar\Api\Response\JsonResponse::class,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Logging Configuration
     |--------------------------------------------------------------------------
     |

@@ -14,6 +14,8 @@ class BaseResponse implements ContentInterface
 
     protected $status = HttpResponse::HTTP_OK;
 
+    protected $headers = [];
+
     public function getData(): array
     {
         return $this->data;
@@ -40,9 +42,16 @@ class BaseResponse implements ContentInterface
         return $this;
     }
 
-    final public function addError(int $code, string $message): self
+    final public function addError($code, string $message): self
     {
         $this->errors[$code] = $message;
+
+        return $this;
+    }
+
+    final public function addErrors($code, array $messages): self
+    {
+        $this->errors[$code] = $messages;
 
         return $this;
     }
@@ -84,7 +93,7 @@ class BaseResponse implements ContentInterface
 
     public function hasValidationErrors(): bool
     {
-        return !empty($this->hasValidationErrors());
+        return !empty($this->validationErrors);
     }
 
     final public function getStatusCode(): int
@@ -99,6 +108,24 @@ class BaseResponse implements ContentInterface
         return $this;
     }
 
+    final public function header(string $name, $value): ContentInterface
+    {
+        if (!empty($name)) {
+            $this->headers[$name] = $value;
+        }
+
+        return $this;
+    }
+
+    final public function withHeaders(array $headers): ContentInterface
+    {
+        foreach ($headers as $name => $value) {
+            $this->header($name, $value);
+        }
+
+        return $this;
+    }
+
     final public function isValid(): bool
     {
         return !$this->hasErrors() && !$this->hasValidationErrors();
@@ -106,7 +133,13 @@ class BaseResponse implements ContentInterface
 
     public function getAnswer()
     {
-        return \response($this->getMap(), $this->getStatusCode());
+        $response = \response($this->getMap(), $this->getStatusCode());
+
+        if (!empty($this->headers)) {
+            $response->withHeaders($this->headers);
+        }
+
+        return $response;
     }
 
     public function getMap(): array
