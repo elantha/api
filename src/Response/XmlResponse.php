@@ -6,9 +6,8 @@ use Grizmar\Api\ApiServiceProvider;
 
 class XmlResponse extends BaseResponse
 {
-    public function getAnswer()
+    public function __construct()
     {
-        return \response($this->getMap(), $this->getStatusCode())
-            ->header('Content-Type', ApiServiceProvider::CONTENT_TYPE_XML);
+        $this->header('Content-Type', ApiServiceProvider::CONTENT_TYPE_XML);
     }
 }

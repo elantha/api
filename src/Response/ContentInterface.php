@@ -17,6 +17,10 @@ interface ContentInterface
 
     public function getStatusCode(): int;
 
+    public function header(string $name, $value): self;
+
+    public function withHeaders(array $headers): self;
+
     public function hasErrors(): bool;
 
     public function getErrors(): array;
