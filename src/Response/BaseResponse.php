@@ -4,7 +4,7 @@ namespace Grizmar\Api\Response;
 
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
-class BaseResponse implements ContentInterface
+class BaseResponse implements ResponseInterface
 {
     protected $data = [];
 
@@ -108,7 +108,7 @@ class BaseResponse implements ContentInterface
         return $this;
     }
 
-    final public function header(string $name, $value): ContentInterface
+    final public function header(string $name, $value): ResponseInterface
     {
         if (!empty($name)) {
             $this->headers[$name] = $value;
@@ -117,7 +117,7 @@ class BaseResponse implements ContentInterface
         return $this;
     }
 
-    final public function withHeaders(array $headers): ContentInterface
+    final public function withHeaders(array $headers): ResponseInterface
     {
         foreach ($headers as $name => $value) {
             $this->header($name, $value);

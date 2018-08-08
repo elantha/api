@@ -3,7 +3,7 @@
 namespace Grizmar\Api\Response;
 
 
-interface ContentInterface
+interface ResponseInterface
 {
     public function getData(): array;
 

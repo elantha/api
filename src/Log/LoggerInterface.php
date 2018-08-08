@@ -3,7 +3,7 @@
 namespace Grizmar\Api\Log;
 
 use Illuminate\Http\Request;
-use Grizmar\Api\Response\ContentInterface;
+use Grizmar\Api\Response\ResponseInterface;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
 
 interface LoggerInterface extends PsrLoggerInterface
@@ -20,5 +20,5 @@ interface LoggerInterface extends PsrLoggerInterface
 
     public function request(Request $request): void;
 
-    public function answer(ContentInterface $response): void;
+    public function answer(ResponseInterface $response): void;
 }

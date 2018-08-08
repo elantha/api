@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Response types as 'Content-Type' => Response type handler
-    | Response handler must implement \Grizmar\Api\Response\ContentInterface
+    | Response handler must implement \Grizmar\Api\Response\ResponseInterface
     */
 
     'response_types' => [
