@@ -3,7 +3,7 @@
 namespace Grizmar\Api\Exceptions;
 
 use Grizmar\Api\Messages\KeeperInterface;
-use Grizmar\Api\Response\ContentInterface;
+use Grizmar\Api\Response\ResponseInterface;
 
 abstract class BaseException extends \Exception
 {
@@ -17,17 +17,17 @@ abstract class BaseException extends \Exception
         return new static($message, $code);
     }
 
-    public function setResponse(ContentInterface $response): self
+    public function setResponse(ResponseInterface $response): self
     {
         $this->response = $response;
 
         return $this;
     }
 
-    public function getResponse(): ContentInterface
+    public function getResponse(): ResponseInterface
     {
         if (empty($this->response)) {
-            $this->response = resolve(ContentInterface::class);
+            $this->response = resolve(ResponseInterface::class);
         }
 
         return $this->response;

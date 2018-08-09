@@ -9,6 +9,6 @@ class XmlResponse extends BaseResponse
 
     public function __construct()
     {
-        $this->header('Content-Type', static::CONTENT_TYPE);
+        $this->addHeader('Content-Type', static::CONTENT_TYPE);
     }
 }

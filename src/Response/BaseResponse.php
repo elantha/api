@@ -4,7 +4,7 @@ namespace Grizmar\Api\Response;
 
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
-class BaseResponse implements ContentInterface
+class BaseResponse implements ResponseInterface
 {
     protected $data = [];
 
@@ -30,16 +30,21 @@ class BaseResponse implements ContentInterface
 
     public function pushData(array $data): self
     {
-        $this->data = array_merge($this->data, $data);
+        $this->data = array_replace_recursive($this->data, $data);
 
         return $this;
     }
 
-    public function addParam(string $code, $value): self
+    public function setParam(string $code, $value): self
     {
         array_set($this->data, $code, $value);
 
         return $this;
+    }
+
+    public function getParam(string $code, $default = null)
+    {
+        return array_get($this->data, $code, $default);
     }
 
     final public function addError($code, string $message): self
@@ -63,13 +68,7 @@ class BaseResponse implements ContentInterface
         return $this;
     }
 
-    /**
-     * @param string $code
-     * @param string[] $messages
-     *
-     * @return BaseResponse
-     */
-    final public function setValidationErrors(string $code, array $messages): self
+    final public function addValidationErrors(string $code, array $messages): self
     {
         $this->validationErrors[$code] = $messages;
 
@@ -108,19 +107,19 @@ class BaseResponse implements ContentInterface
         return $this;
     }
 
-    final public function header(string $name, $value): ContentInterface
+    final public function addHeader(string $key, $value): self
     {
-        if (!empty($name)) {
-            $this->headers[$name] = $value;
+        if (!empty($key)) {
+            $this->headers[$key] = $value;
         }
 
         return $this;
     }
 
-    final public function withHeaders(array $headers): ContentInterface
+    final public function addHeaders(array $headers): self
     {
-        foreach ($headers as $name => $value) {
-            $this->header($name, $value);
+        foreach ($headers as $key => $value) {
+            $this->addHeader($key, $value);
         }
 
         return $this;

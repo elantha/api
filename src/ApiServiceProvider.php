@@ -5,7 +5,7 @@ namespace Grizmar\Api;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
-use Grizmar\Api\Response\ContentInterface;
+use Grizmar\Api\Response\ResponseInterface;
 use Grizmar\Api\Response\JsonResponse;
 use Grizmar\Api\Log\LoggerInterface;
 use Grizmar\Api\Log\Logger;
@@ -68,7 +68,7 @@ class ApiServiceProvider extends ServiceProvider
             $responseClass = $types['default'] ?? JsonResponse::class;
         }
 
-        $this->app->bind(ContentInterface::class, $responseClass);
+        $this->app->bind(ResponseInterface::class, $responseClass);
     }
 
     private function bindLogger()
@@ -90,11 +90,11 @@ class ApiServiceProvider extends ServiceProvider
     {
         Response::macro('rest', function ($data, $status = false) {
 
-            if ($data instanceof ContentInterface) {
+            if ($data instanceof ResponseInterface) {
                 $response = $data;
             }
             else {
-                $response = resolve(ContentInterface::class);
+                $response = resolve(ResponseInterface::class);
                 $response->setData($data);
             }
 

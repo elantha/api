@@ -5,7 +5,7 @@ namespace Grizmar\Api\Exceptions;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-use Grizmar\Api\Response\ContentInterface;
+use Grizmar\Api\Response\ResponseInterface;
 use Grizmar\Api\Log\LoggerInterface;
 
 class Handler
@@ -25,7 +25,7 @@ class Handler
         return response()->rest($response);
     }
 
-    protected static function getApiResponse(BaseException $e): ContentInterface
+    protected static function getApiResponse(BaseException $e): ResponseInterface
     {
         $response = $e->getResponse();
 
@@ -38,9 +38,9 @@ class Handler
         return $response;
     }
 
-    protected static function getValidationErrorResponse(ValidationException $e): ContentInterface
+    protected static function getValidationErrorResponse(ValidationException $e): ResponseInterface
     {
-        $response = resolve(ContentInterface::class);
+        $response = resolve(ResponseInterface::class);
 
         $errors = $e->validator->errors()->getMessages();
 
@@ -53,9 +53,9 @@ class Handler
         return $response;
     }
 
-    protected static function getInternalErrorResponse(): ContentInterface
+    protected static function getInternalErrorResponse(): ResponseInterface
     {
-        $response = resolve(ContentInterface::class);
+        $response = resolve(ResponseInterface::class);
 
         $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
 

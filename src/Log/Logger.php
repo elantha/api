@@ -2,7 +2,7 @@
 
 namespace Grizmar\Api\Log;
 
-use Grizmar\Api\Response\ContentInterface;
+use Grizmar\Api\Response\ResponseInterface;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Monolog\Logger as MonologLogger;
@@ -113,7 +113,7 @@ class Logger implements LoggerInterface
         $this->info(config('api.request_format', ''), $localContext);
     }
 
-    public function answer(ContentInterface $response): void
+    public function answer(ResponseInterface $response): void
     {
         $localContext = [
             'body' => json_encode($response->getMap(), JSON_UNESCAPED_UNICODE),
