@@ -1,6 +1,15 @@
 <?php
 
 return [
+    /*
+    |--------------------------------------------------------------------------
+    | Request Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Dispatcher must implement \Grizmar\Api\Internal\DispatcherInterface
+    */
+
+    'dispatcher' => \Grizmar\Api\Internal\InternalDispatcher::class,
 
     /*
     |--------------------------------------------------------------------------

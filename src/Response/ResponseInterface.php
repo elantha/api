@@ -5,6 +5,8 @@ namespace Grizmar\Api\Response;
 
 interface ResponseInterface
 {
+    public function load(array $content, array $headers = []);
+
     public function setStatusCode(int $code);
 
     public function getStatusCode(): int;
@@ -23,17 +25,17 @@ interface ResponseInterface
 
     public function setParam(string $code, $value);
 
-    public function addError($code, string $message);
+    public function addError($code, $message);
 
-    public function addErrors($code, array $messages);
+    public function addErrors(array $errors);
 
     public function hasErrors(): bool;
 
     public function getErrors(): array;
 
-    public function addValidationError(string $code, string $message);
+    public function addValidationError(string $code, $message);
 
-    public function addValidationErrors(string $code, array $messages);
+    public function addValidationErrors(array $errors);
 
     public function hasValidationErrors(): bool;
 

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Grizmar\Api\Response\ResponseInterface;
 use Grizmar\Api\Validators\RequestValidator;
+use Grizmar\Api\Internal\DispatcherInterface;
 use Grizmar\Api\Log\LoggerInterface;
 
 class BaseController extends Controller
@@ -57,5 +58,10 @@ class BaseController extends Controller
     protected function log($level, string $message, array $context = [])
     {
         return $this->logger->log($level, $message, $context);
+    }
+
+    protected function dispatcher(): DispatcherInterface
+    {
+        return resolve(DispatcherInterface::class);
     }
 }

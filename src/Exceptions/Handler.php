@@ -44,9 +44,7 @@ class Handler
 
         $errors = $e->validator->errors()->getMessages();
 
-        foreach($errors as $fieldName => $fieldMessages) {
-            $response->setValidationErrors($fieldName, $fieldMessages);
-        }
+        $response->addValidationErrors($errors);
 
         $response->setStatusCode($e->status);
 

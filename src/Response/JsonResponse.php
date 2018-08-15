@@ -7,6 +7,10 @@ class JsonResponse extends BaseResponse
 {
     public function getAnswer()
     {
-        return \response()->json($this->getMap(), $this->getStatusCode(), $this->headers);
+        return \response()->json(
+            $this->getMap(),
+            $this->getStatusCode(),
+            $this->headers->all()
+        );
     }
 }

@@ -97,10 +97,7 @@ class Logger implements LoggerInterface
 
     public function request(Request $request): void
     {
-        $this->addContext([
-            'url'    => $request->getPathInfo(),
-            'method' => $request->getMethod(),
-        ]);
+        $this->setRequestContext($request);
 
         if (!$this->getContextParam('unique_id')) {
             $this->setContextParam('unique_id', str_random(self::UNIQUE_ID_LENDTH));
@@ -111,6 +108,14 @@ class Logger implements LoggerInterface
         ];
 
         $this->info(config('api.request_format', ''), $localContext);
+    }
+
+    public function setRequestContext(Request $request): void
+    {
+        $this->addContext([
+            'url'    => $request->getPathInfo(),
+            'method' => $request->getMethod(),
+        ]);
     }
 
     public function answer(ResponseInterface $response): void

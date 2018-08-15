@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api;
+namespace Grizmar\Api\Providers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -12,6 +12,8 @@ use Grizmar\Api\Log\Logger;
 use Grizmar\Api\Log\AccessLogger;
 use Grizmar\Api\Messages\KeeperInterface;
 use Grizmar\Api\Messages\Keeper;
+use Grizmar\Api\Internal\DispatcherInterface;
+use Grizmar\Api\Internal\InternalDispatcher;
 use Illuminate\Support\Str;
 
 class ApiServiceProvider extends ServiceProvider
@@ -29,6 +31,8 @@ class ApiServiceProvider extends ServiceProvider
         ]);
 
         $this->bindResponse($request);
+
+        $this->bindDispatcher();
 
         $this->bindLogger();
         
@@ -49,7 +53,7 @@ class ApiServiceProvider extends ServiceProvider
 
     private function bindResponse(Request $request): void
     {
-        $responseClass = false;
+        $handlerName = false;
 
         $types = (array) config('api.response_types', []);
 
@@ -58,17 +62,28 @@ class ApiServiceProvider extends ServiceProvider
         if (!empty($contentType)) {
             foreach ($types as $type => $handler) {
                 if (Str::is($type, $contentType)) {
-                    $responseClass = $handler;
+                    $handlerName = $handler;
                     break;
                 }
             }
         }
 
-        if (!$responseClass) {
-            $responseClass = $types['default'] ?? JsonResponse::class;
+        if (!$handlerName) {
+            $handlerName = $types['default'] ?? JsonResponse::class;
         }
 
-        $this->app->bind(ResponseInterface::class, $responseClass);
+        $this->app->bind(ResponseInterface::class, $handlerName);
+    }
+
+    private function bindDispatcher()
+    {
+        $handlerName = config('api.dispatcher');
+
+        if (!$handlerName) {
+            $handlerName = InternalDispatcher::class;
+        }
+
+        $this->app->bind(DispatcherInterface::class, $handlerName);
     }
 
     private function bindLogger()
