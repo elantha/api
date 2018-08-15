@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Internal;
+namespace Grizmar\Api\Dispatch;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;

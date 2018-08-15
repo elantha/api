@@ -9,7 +9,7 @@ return [
     | Dispatcher must implement \Grizmar\Api\Internal\DispatcherInterface
     */
 
-    'dispatcher' => \Grizmar\Api\Internal\InternalDispatcher::class,
+    'dispatcher' => \Grizmar\Api\Dispatch\InternalDispatcher::class,
 
     /*
     |--------------------------------------------------------------------------

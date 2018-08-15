@@ -12,8 +12,8 @@ use Grizmar\Api\Log\Logger;
 use Grizmar\Api\Log\AccessLogger;
 use Grizmar\Api\Messages\KeeperInterface;
 use Grizmar\Api\Messages\Keeper;
-use Grizmar\Api\Internal\DispatcherInterface;
-use Grizmar\Api\Internal\InternalDispatcher;
+use Grizmar\Api\Dispatch\DispatcherInterface;
+use Grizmar\Api\Dispatch\InternalDispatcher;
 use Illuminate\Support\Str;
 
 class ApiServiceProvider extends ServiceProvider
@@ -27,7 +27,7 @@ class ApiServiceProvider extends ServiceProvider
     public function boot(Request $request)
     {
         $this->publishes([
-            __DIR__.'/../config/api.php' => config_path('api.php'),
+            __DIR__.'/../../config/api.php' => config_path('api.php'),
         ]);
 
         $this->bindResponse($request);
