@@ -25,8 +25,6 @@ class InternalDispatcher extends BaseDispatcher
 
         $request = $this->createRequest($method, $uri, $params, $content);
 
-        RequestFacade::clearResolvedInstance('request');
-
         $response = $this->dispatch($request);
 
         $this->app->instance('request', $parentRequest);
@@ -39,6 +37,8 @@ class InternalDispatcher extends BaseDispatcher
 
     protected function dispatch(Request $request)
     {
+        RequestFacade::clearResolvedInstance('request');
+
         try {
             $response = $this->app->handle($request);
 
