@@ -22,25 +22,6 @@ class BaseResponse implements ResponseInterface
         $this->headers = new HeaderBag();
     }
 
-    public function load(array $content, array $headers = []): self
-    {
-        $this->setStatusCode(
-            array_get($content, 'status', HttpResponse::HTTP_OK)
-        );
-
-        $this->addHeaders($headers);
-
-        $this->setData(array_get($content, 'data', []));
-
-        $this->addErrors(array_get($content, 'errors', []));
-
-        $this->addValidationErrors(
-            array_get($content, 'validation_errors', [])
-        );
-
-        return $this;
-    }
-
     public function getData(): array
     {
         return $this->data;

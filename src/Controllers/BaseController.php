@@ -14,7 +14,10 @@ use Grizmar\Api\Log\LoggerInterface;
 
 class BaseController extends Controller
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, RequestValidator;
+    use AuthorizesRequests,
+        DispatchesJobs,
+        ValidatesRequests,
+        RequestValidator;
 
     protected $response;
     protected $request;
@@ -50,11 +53,6 @@ class BaseController extends Controller
     {
     }
 
-    protected function requestLog(): void
-    {
-        $this->logger->request($this->request);
-    }
-
     protected function log($level, string $message, array $context = [])
     {
         return $this->logger->log($level, $message, $context);
@@ -63,5 +61,10 @@ class BaseController extends Controller
     protected function dispatcher(): DispatcherInterface
     {
         return resolve(DispatcherInterface::class);
+    }
+
+    private function requestLog(): void
+    {
+        $this->logger->request($this->request);
     }
 }

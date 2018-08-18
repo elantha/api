@@ -5,9 +5,7 @@ namespace Grizmar\Api\Dispatch;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Request as RequestFacade;
-use Symfony\Component\HttpFoundation\Response;
-use Grizmar\Api\Response\ResponseInterface;
-use Grizmar\Api\Exceptions\Handler;
+use Grizmar\Api\Handlers\HandlerInterface;
 use Grizmar\Api\Log\LoggerInterface;
 
 class InternalDispatcher extends BaseDispatcher
@@ -29,19 +27,27 @@ class InternalDispatcher extends BaseDispatcher
 
         RequestFacade::clearResolvedInstance('request');
 
+        $response = $this->dispatch($request);
+
+        $this->app->instance('request', $parentRequest);
+
+        resolve(LoggerInterface::class)
+            ->setRequestContext($parentRequest);
+
+        return $response;
+    }
+
+    protected function dispatch(Request $request)
+    {
         try {
-            $response = $this->createResponse(
-                $this->app->handle($request)
-            );
+            $response = $this->app->handle($request);
 
-            $this->app->instance('request', $parentRequest);
-
-            resolve(LoggerInterface::class)
-                ->setRequestContext($parentRequest);
-
+            if ($this->asArray) {
+                $response = $response->getOriginalContent();
+            }
         } catch (\Exception $e) {
-
-            $response = Handler::render($request, $e);
+            $response = resolve(HandlerInterface::class)
+                ->handle($e, $request);
 
             if ($this->asArray) {
                 $response = $response->getMap();
@@ -54,6 +60,7 @@ class InternalDispatcher extends BaseDispatcher
     protected function createRequest($method, $uri, array $params, $content)
     {
         $this->params = array_merge_recursive($this->params, $params);
+        $this->content .= $content;
 
         $request = Request::create(
             $uri,
@@ -70,19 +77,5 @@ class InternalDispatcher extends BaseDispatcher
         }
 
         return $request;
-    }
-
-    protected function createResponse(Response $httpResponse): ResponseInterface
-    {
-        $content = $httpResponse->getOriginalContent();
-
-        if (!$this->asArray) {
-            $response = resolve(ResponseInterface::class);
-            $response->load($content, $httpResponse->headers->all());
-        } else {
-            $response = $content;
-        }
-
-        return $response;
     }
 }

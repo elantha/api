@@ -5,8 +5,6 @@ namespace Grizmar\Api\Response;
 
 interface ResponseInterface
 {
-    public function load(array $content, array $headers = []);
-
     public function setStatusCode(int $code);
 
     public function getStatusCode(): int;

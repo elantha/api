@@ -13,7 +13,9 @@ use Grizmar\Api\Log\AccessLogger;
 use Grizmar\Api\Messages\KeeperInterface;
 use Grizmar\Api\Messages\Keeper;
 use Grizmar\Api\Dispatch\DispatcherInterface;
-use Grizmar\Api\Dispatch\InternalDispatcher;
+use Grizmar\Api\Dispatch\HttpDispatcher;
+use Grizmar\Api\Handlers\ErrorHandler;
+use Grizmar\Api\Handlers\HandlerInterface;
 use Illuminate\Support\Str;
 
 class ApiServiceProvider extends ServiceProvider
@@ -32,6 +34,8 @@ class ApiServiceProvider extends ServiceProvider
 
         $this->bindResponse($request);
 
+        $this->bindHandler();
+        
         $this->bindDispatcher();
 
         $this->bindLogger();
@@ -75,12 +79,19 @@ class ApiServiceProvider extends ServiceProvider
         $this->app->bind(ResponseInterface::class, $handlerName);
     }
 
+    private function bindHandler()
+    {
+        $handlerName = config('api.error_handler', ErrorHandler::class);
+
+        $this->app->bind(HandlerInterface::class, $handlerName);
+    }
+
     private function bindDispatcher()
     {
         $handlerName = config('api.dispatcher');
 
         if (!$handlerName) {
-            $handlerName = InternalDispatcher::class;
+            $handlerName = HttpDispatcher::class;
         }
 
         $this->app->bind(DispatcherInterface::class, $handlerName);

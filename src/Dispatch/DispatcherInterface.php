@@ -24,5 +24,9 @@ interface DispatcherInterface
 
     public function on(string $domain): DispatcherInterface;
 
-    public function with(array $params): DispatcherInterface;
+    public function withParams(array $params): DispatcherInterface;
+
+    public function withContent($content): DispatcherInterface;
+
+    public function json(string $content): DispatcherInterface;
 }

@@ -12,5 +12,12 @@
             "email": "grizmar5@gmail.com"
         }
     ],
-    "require": {}
+    "autoload": {
+        "psr-4": {
+            "Grizmar\\Api\\": "src"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    }
 }

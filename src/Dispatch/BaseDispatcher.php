@@ -11,9 +11,11 @@ abstract class BaseDispatcher implements DispatcherInterface
 
     protected $headers;
 
+    protected $cookies = [];
+
     protected $params = [];
 
-    protected $cookies = [];
+    protected $content = '';
 
     protected $asArray = false;
 
@@ -79,11 +81,25 @@ abstract class BaseDispatcher implements DispatcherInterface
         return $this;
     }
 
-    public function with(array $params): DispatcherInterface
+    public function withParams(array $params): DispatcherInterface
     {
         $this->params = $params;
 
         return $this;
+    }
+
+    public function withContent($content): DispatcherInterface
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function json(string $content): DispatcherInterface
+    {
+        return $this
+            ->withContent($content)
+            ->header('Content-Type', 'application/json');
     }
 
     public function asArray(): DispatcherInterface

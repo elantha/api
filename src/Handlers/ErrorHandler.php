@@ -1,31 +1,33 @@
 <?php
 
-namespace Grizmar\Api\Exceptions;
+namespace Grizmar\Api\Handlers;
 
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Grizmar\Api\Response\ResponseInterface;
+use Grizmar\Api\Exceptions\BaseException;
 use Grizmar\Api\Log\LoggerInterface;
 
-class Handler
+class ErrorHandler implements HandlerInterface
 {
-    public static function render(Request $request, \Exception $e)
+    public function handle(\Exception $e, Request $request = null): HttpResponse
     {
         if ($e instanceof BaseException) {
-            $response = static::getApiResponse($e);
+            $response = $this->getApiResponse($e);
         } elseif ($e instanceof ValidationException) {
-            $response = static::getValidationErrorResponse($e);
+            $response = $this->getValidationErrorResponse($e);
         } else {
-            $response = static::getInternalErrorResponse();
+            $response = $this->getInternalErrorResponse();
 
-            self::log($e);
+            $this->addMessageToLog($e);
         }
 
         return response()->rest($response);
     }
 
-    protected static function getApiResponse(BaseException $e): ResponseInterface
+    protected function getApiResponse(BaseException $e): ResponseInterface
     {
         $response = $e->getResponse();
 
@@ -38,7 +40,7 @@ class Handler
         return $response;
     }
 
-    protected static function getValidationErrorResponse(ValidationException $e): ResponseInterface
+    protected function getValidationErrorResponse(ValidationException $e): ResponseInterface
     {
         $response = resolve(ResponseInterface::class);
 
@@ -51,7 +53,7 @@ class Handler
         return $response;
     }
 
-    protected static function getInternalErrorResponse(): ResponseInterface
+    protected function getInternalErrorResponse(): ResponseInterface
     {
         $response = resolve(ResponseInterface::class);
 
@@ -60,7 +62,7 @@ class Handler
         return $response;
     }
 
-    protected static function log(\Exception $e): void
+    protected function addMessageToLog(\Exception $e): void
     {
         resolve(LoggerInterface::class)
             ->addContext([
