@@ -1,18 +1,24 @@
 <?php
 
-namespace Grizmar\Api\Exceptions;
+namespace Grizmar\Api\Http\Exceptions;
 
+use Grizmar\Api\Exceptions\ApiException;
 use Grizmar\Api\Messages\KeeperInterface;
 use Grizmar\Api\Response\ResponseInterface;
 
-abstract class BaseException extends \Exception
+abstract class BaseHttpException extends ApiException
 {
+    /* @var ResponseInterface $response */
     private $response;
+
+    abstract public function getStatusCode(): int;
 
     public static function make($code = 0, array $context = []): self
     {
-        $message = resolve(KeeperInterface::class)
-            ->getMessage($code, $context);
+        /* @var KeeperInterface $keeper */
+        $keeper = resolve(KeeperInterface::class);
+
+        $message = $keeper->getMessage($code, $context);
 
         return new static($message, $code);
     }
@@ -32,6 +38,4 @@ abstract class BaseException extends \Exception
 
         return $this->response;
     }
-
-    abstract public function getStatusCode(): int;
 }

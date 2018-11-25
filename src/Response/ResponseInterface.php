@@ -5,35 +5,35 @@ namespace Grizmar\Api\Response;
 
 interface ResponseInterface
 {
-    public function setStatusCode(int $code);
+    public function setStatusCode(int $code): self;
 
     public function getStatusCode(): int;
 
-    public function addHeader(string $key, $values);
+    public function addHeader(string $key, $values): self;
 
-    public function addHeaders(array $headers);
+    public function addHeaders(array $headers): self;
 
     public function getData(): array;
 
-    public function setData(array $data);
+    public function setData(array $data): self;
 
-    public function pushData(array $data);
+    public function pushData(array $data): self;
 
     public function getParam(string $code, $default = null);
 
-    public function setParam(string $code, $value);
+    public function setParam(string $code, $value): self;
 
-    public function addError($code, $message);
+    public function addError($code, $message): self;
 
-    public function addErrors(array $errors);
+    public function addErrors(array $errors): self;
 
     public function hasErrors(): bool;
 
     public function getErrors(): array;
 
-    public function addValidationError(string $code, $message);
+    public function addValidationError(string $code, $message): self;
 
-    public function addValidationErrors(array $errors);
+    public function addValidationErrors(array $errors): self;
 
     public function hasValidationErrors(): bool;
 

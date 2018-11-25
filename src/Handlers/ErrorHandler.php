@@ -3,18 +3,18 @@
 namespace Grizmar\Api\Handlers;
 
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response as HttpResponse;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
 use Grizmar\Api\Response\ResponseInterface;
-use Grizmar\Api\Exceptions\BaseException;
+use Grizmar\Api\Http\Exceptions\BaseHttpException;
+use Grizmar\Api\Http\Exceptions\EmptyException;
 use Grizmar\Api\Log\LoggerInterface;
 
 class ErrorHandler implements HandlerInterface
 {
-    public function handle(\Exception $e, Request $request = null): HttpResponse
+    public function handle(\Throwable $e, Request $request = null): Response
     {
-        if ($e instanceof BaseException) {
+        if ($e instanceof BaseHttpException) {
             $response = $this->getApiResponse($e);
         } elseif ($e instanceof ValidationException) {
             $response = $this->getValidationErrorResponse($e);
@@ -27,7 +27,7 @@ class ErrorHandler implements HandlerInterface
         return response()->rest($response);
     }
 
-    protected function getApiResponse(BaseException $e): ResponseInterface
+    protected function getApiResponse(BaseHttpException $e): ResponseInterface
     {
         $response = $e->getResponse();
 
@@ -42,6 +42,7 @@ class ErrorHandler implements HandlerInterface
 
     protected function getValidationErrorResponse(ValidationException $e): ResponseInterface
     {
+        /* @var ResponseInterface $response */
         $response = resolve(ResponseInterface::class);
 
         $errors = $e->validator->errors()->getMessages();
@@ -55,6 +56,7 @@ class ErrorHandler implements HandlerInterface
 
     protected function getInternalErrorResponse(): ResponseInterface
     {
+        /* @var ResponseInterface $response */
         $response = resolve(ResponseInterface::class);
 
         $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -62,12 +64,14 @@ class ErrorHandler implements HandlerInterface
         return $response;
     }
 
-    protected function addMessageToLog(\Exception $e): void
+    protected function addMessageToLog(\Throwable $e): void
     {
-        resolve(LoggerInterface::class)
-            ->addContext([
-                'internal_code' => $e->getCode(),
-                'internal_text' => $e->getMessage(),
-            ]);
+        /* @var LoggerInterface $logger */
+        $logger = resolve(LoggerInterface::class);
+
+        $logger->addContext([
+            'internal_code' => $e->getCode(),
+            'internal_text' => $e->getMessage(),
+        ]);
     }
 }

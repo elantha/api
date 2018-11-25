@@ -12,8 +12,6 @@ use Grizmar\Api\Log\Logger;
 use Grizmar\Api\Log\AccessLogger;
 use Grizmar\Api\Messages\KeeperInterface;
 use Grizmar\Api\Messages\Keeper;
-use Grizmar\Api\Dispatch\DispatcherInterface;
-use Grizmar\Api\Dispatch\HttpDispatcher;
 use Grizmar\Api\Handlers\ErrorHandler;
 use Grizmar\Api\Handlers\HandlerInterface;
 use Illuminate\Support\Str;
@@ -34,15 +32,13 @@ class ApiServiceProvider extends ServiceProvider
 
         $this->bindResponse($request);
 
-        $this->bindHandler();
-        
-        $this->bindDispatcher();
+        $this->bindErrorHandler();
 
         $this->bindLogger();
         
         $this->bindMessageKeeper();
 
-        $this->responseMacro();
+        $this->registerResponseMacro();
     }
 
     /**
@@ -79,22 +75,11 @@ class ApiServiceProvider extends ServiceProvider
         $this->app->bind(ResponseInterface::class, $handlerName);
     }
 
-    private function bindHandler()
+    private function bindErrorHandler()
     {
         $handlerName = config('api.error_handler', ErrorHandler::class);
 
         $this->app->bind(HandlerInterface::class, $handlerName);
-    }
-
-    private function bindDispatcher()
-    {
-        $handlerName = config('api.dispatcher');
-
-        if (!$handlerName) {
-            $handlerName = HttpDispatcher::class;
-        }
-
-        $this->app->bind(DispatcherInterface::class, $handlerName);
     }
 
     private function bindLogger()
@@ -112,10 +97,11 @@ class ApiServiceProvider extends ServiceProvider
         $this->app->singleton(KeeperInterface::class, Keeper::class);
     }
 
-    private function responseMacro()
+    private function registerResponseMacro()
     {
         Response::macro('rest', function ($data, $status = false) {
 
+            /* @var ResponseInterface $response */
             if ($data instanceof ResponseInterface) {
                 $response = $data;
             }
@@ -128,7 +114,9 @@ class ApiServiceProvider extends ServiceProvider
                 $response->setStatusCode($status);
             }
 
-            resolve(LoggerInterface::class)->answer($response);
+            /* @var LoggerInterface $logger */
+            $logger = resolve(LoggerInterface::class);
+            $logger->answer($response);
 
             return $response->getAnswer();
         });

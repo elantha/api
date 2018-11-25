@@ -7,5 +7,5 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface HandlerInterface
 {
-    public function handle(\Exception $e, Request $request = null): Response;
+    public function handle(\Throwable $e, Request $request = null): Response;
 }

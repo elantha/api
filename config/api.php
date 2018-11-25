@@ -3,16 +3,6 @@
 return [
     /*
     |--------------------------------------------------------------------------
-    | Request Configuration
-    |--------------------------------------------------------------------------
-    |
-    | NOTE: Dispatcher must implement \Grizmar\Api\Internal\DispatcherInterface
-    */
-
-    'dispatcher' => \Grizmar\Api\Dispatch\InternalDispatcher::class,
-
-    /*
-    |--------------------------------------------------------------------------
     | Response Configuration
     |--------------------------------------------------------------------------
     |

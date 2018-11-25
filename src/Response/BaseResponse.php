@@ -15,6 +15,7 @@ class BaseResponse implements ResponseInterface
 
     protected $status = HttpResponse::HTTP_OK;
 
+    /* @var HeaderBag $headers */
     protected $headers;
 
     public function __construct()
@@ -27,21 +28,21 @@ class BaseResponse implements ResponseInterface
         return $this->data;
     }
 
-    public function setData(array $data): self
+    public function setData(array $data): ResponseInterface
     {
         $this->data = $data;
 
         return $this;
     }
 
-    public function pushData(array $data): self
+    public function pushData(array $data): ResponseInterface
     {
         $this->data = array_replace_recursive($this->data, $data);
 
         return $this;
     }
 
-    public function setParam(string $code, $value): self
+    public function setParam(string $code, $value): ResponseInterface
     {
         array_set($this->data, $code, $value);
 
@@ -53,14 +54,14 @@ class BaseResponse implements ResponseInterface
         return array_get($this->data, $code, $default);
     }
 
-    final public function addError($code, $message): self
+    final public function addError($code, $message): ResponseInterface
     {
         $this->errors[$code] = $message;
 
         return $this;
     }
 
-    final public function addErrors(array $errors): self
+    final public function addErrors(array $errors): ResponseInterface
     {
         foreach ($errors as $code => $message) {
             $this->addError($code, $message);
@@ -69,14 +70,14 @@ class BaseResponse implements ResponseInterface
         return $this;
     }
 
-    final public function addValidationError(string $code, $message): self
+    final public function addValidationError(string $code, $message): ResponseInterface
     {
         $this->validationErrors[$code] = $message;
 
         return $this;
     }
 
-    final public function addValidationErrors(array $errors): self
+    final public function addValidationErrors(array $errors): ResponseInterface
     {
         foreach ($errors as $code => $message) {
             $this->addValidationError($code, $message);
@@ -110,21 +111,21 @@ class BaseResponse implements ResponseInterface
         return $this->status;
     }
 
-    final public function setStatusCode(int $code): self
+    final public function setStatusCode(int $code): ResponseInterface
     {
         $this->status = $code;
 
         return $this;
     }
 
-    final public function addHeader(string $key, $value): self
+    final public function addHeader(string $key, $value): ResponseInterface
     {
         $this->headers->set($key, $value);
 
         return $this;
     }
 
-    final public function addHeaders(array $headers): self
+    final public function addHeaders(array $headers): ResponseInterface
     {
         foreach ($headers as $key => $value) {
             $this->addHeader($key, $value);
