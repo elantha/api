@@ -16,5 +16,8 @@
         "psr-4": {
             "Grizmar\\Api\\": "src"
         }
+    },
+    "require": {
+        "spatie/array-to-xml": "^2.7"
     }
 }

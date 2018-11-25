@@ -139,7 +139,7 @@ class BaseResponse implements ResponseInterface
         return !$this->hasErrors() && !$this->hasValidationErrors();
     }
 
-    public function getAnswer()
+    public function getAnswer(): HttpResponse
     {
         return \response($this->getMap(), $this->getStatusCode())
             ->withHeaders($this->headers);

@@ -2,10 +2,11 @@
 
 namespace Grizmar\Api\Middleware;
 
+use \Illuminate\Http\Request;
 
 class XmlRequestMiddleware
 {
-    public function handle($request, \Closure $next)
+    public function handle(Request $request, \Closure $next)
     {
         if (strtolower($request->getContentType()) === 'xml') {
 

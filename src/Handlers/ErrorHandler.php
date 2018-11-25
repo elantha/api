@@ -9,22 +9,40 @@ use Grizmar\Api\Response\ResponseInterface;
 use Grizmar\Api\Http\Exceptions\BaseHttpException;
 use Grizmar\Api\Http\Exceptions\EmptyException;
 use Grizmar\Api\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ErrorHandler implements HandlerInterface
 {
     public function handle(\Throwable $e, Request $request = null): Response
     {
-        if ($e instanceof BaseHttpException) {
+        if ($e instanceof HttpException) {
+            $response = $this->getKernelHttpResponse($e);
+            $this->logInternalError($e, $request);
+        }
+        elseif ($e instanceof BaseHttpException) {
             $response = $this->getApiResponse($e);
-        } elseif ($e instanceof ValidationException) {
+        }
+        elseif ($e instanceof ValidationException) {
             $response = $this->getValidationErrorResponse($e);
-        } else {
+        }
+        else {
             $response = $this->getInternalErrorResponse();
-
-            $this->addMessageToLog($e);
+            $this->logInternalError($e);
         }
 
         return response()->rest($response);
+    }
+
+    protected function getKernelHttpResponse(HttpException $e): ResponseInterface
+    {
+        /* @var ResponseInterface $response */
+        $response = resolve(ResponseInterface::class);
+
+        $response->setStatusCode($e->getStatusCode());
+        $response->addHeaders($e->getHeaders());
+        $response->addError($e->getCode(), $e->getMessage());
+
+        return $response;
     }
 
     protected function getApiResponse(BaseHttpException $e): ResponseInterface
@@ -64,7 +82,7 @@ class ErrorHandler implements HandlerInterface
         return $response;
     }
 
-    protected function addMessageToLog(\Throwable $e): void
+    protected function logInternalError(\Throwable $e, Request $request = null): void
     {
         /* @var LoggerInterface $logger */
         $logger = resolve(LoggerInterface::class);
@@ -73,5 +91,9 @@ class ErrorHandler implements HandlerInterface
             'internal_code' => $e->getCode(),
             'internal_text' => $e->getMessage(),
         ]);
+
+        if ($request) {
+            $logger->request($request);
+        }
     }
 }

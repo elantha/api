@@ -2,6 +2,7 @@
 
 namespace Grizmar\Api\Log;
 
+use Grizmar\Api\Response\JsonResponse;
 use Grizmar\Api\Response\ResponseInterface;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -104,7 +105,7 @@ class Logger implements LoggerInterface
         }
 
         $localContext = [
-            'body' => json_encode($request->toArray(), JSON_UNESCAPED_UNICODE),
+            'body' => $this->getRequestBody($request),
         ];
 
         $this->info(config('api.request_format', ''), $localContext);
@@ -121,7 +122,7 @@ class Logger implements LoggerInterface
     public function answer(ResponseInterface $response): void
     {
         $localContext = [
-            'body' => json_encode($response->getMap(), JSON_UNESCAPED_UNICODE),
+            'body' => $this->getResponseBody($response),
         ];
 
         $level = $this->getLevel($response->getStatusCode());
@@ -147,6 +148,28 @@ class Logger implements LoggerInterface
             $result = MonologLogger::ERROR;
         } else {
             $result = MonologLogger::INFO;
+        }
+
+        return $result;
+    }
+
+    protected function getRequestBody(Request $request): string
+    {
+        if ($request->isJson()) {
+            $result = json_encode($request->toArray(), JSON_UNESCAPED_UNICODE);
+        } else {
+            $result = $request->getContent();
+        }
+
+        return $result;
+    }
+
+    protected function getResponseBody(ResponseInterface $response): string
+    {
+        if ($response instanceof JsonResponse) {
+            $result = json_encode($response->getMap(), JSON_UNESCAPED_UNICODE);
+        } else {
+            $result = $response->getAnswer()->getContent();
         }
 
         return $result;

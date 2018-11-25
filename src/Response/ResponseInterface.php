@@ -2,6 +2,7 @@
 
 namespace Grizmar\Api\Response;
 
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 interface ResponseInterface
 {
@@ -41,7 +42,7 @@ interface ResponseInterface
 
     public function isValid(): bool;
 
-    public function getAnswer();
+    public function getAnswer(): HttpResponse;
 
     public function getMap(): array;
 }
