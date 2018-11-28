@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api;
+namespace Grizmar\Api\Providers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -12,6 +12,8 @@ use Grizmar\Api\Log\Logger;
 use Grizmar\Api\Log\AccessLogger;
 use Grizmar\Api\Messages\KeeperInterface;
 use Grizmar\Api\Messages\Keeper;
+use Grizmar\Api\Handlers\ErrorHandler;
+use Grizmar\Api\Handlers\HandlerInterface;
 use Illuminate\Support\Str;
 
 class ApiServiceProvider extends ServiceProvider
@@ -25,16 +27,18 @@ class ApiServiceProvider extends ServiceProvider
     public function boot(Request $request)
     {
         $this->publishes([
-            __DIR__.'/../config/api.php' => config_path('api.php'),
+            __DIR__.'/../../config/api.php' => config_path('api.php'),
         ]);
 
         $this->bindResponse($request);
+
+        $this->bindErrorHandler();
 
         $this->bindLogger();
         
         $this->bindMessageKeeper();
 
-        $this->responseMacro();
+        $this->registerResponseMacro();
     }
 
     /**
@@ -49,7 +53,7 @@ class ApiServiceProvider extends ServiceProvider
 
     private function bindResponse(Request $request): void
     {
-        $responseClass = false;
+        $handlerName = false;
 
         $types = (array) config('api.response_types', []);
 
@@ -58,17 +62,24 @@ class ApiServiceProvider extends ServiceProvider
         if (!empty($contentType)) {
             foreach ($types as $type => $handler) {
                 if (Str::is($type, $contentType)) {
-                    $responseClass = $handler;
+                    $handlerName = $handler;
                     break;
                 }
             }
         }
 
-        if (!$responseClass) {
-            $responseClass = $types['default'] ?? JsonResponse::class;
+        if (!$handlerName) {
+            $handlerName = $types['default'] ?? JsonResponse::class;
         }
 
-        $this->app->bind(ResponseInterface::class, $responseClass);
+        $this->app->bind(ResponseInterface::class, $handlerName);
+    }
+
+    private function bindErrorHandler()
+    {
+        $handlerName = config('api.error_handler', ErrorHandler::class);
+
+        $this->app->bind(HandlerInterface::class, $handlerName);
     }
 
     private function bindLogger()
@@ -86,10 +97,11 @@ class ApiServiceProvider extends ServiceProvider
         $this->app->singleton(KeeperInterface::class, Keeper::class);
     }
 
-    private function responseMacro()
+    private function registerResponseMacro()
     {
         Response::macro('rest', function ($data, $status = false) {
 
+            /* @var ResponseInterface $response */
             if ($data instanceof ResponseInterface) {
                 $response = $data;
             }
@@ -102,7 +114,9 @@ class ApiServiceProvider extends ServiceProvider
                 $response->setStatusCode($status);
             }
 
-            resolve(LoggerInterface::class)->answer($response);
+            /* @var LoggerInterface $logger */
+            $logger = resolve(LoggerInterface::class);
+            $logger->answer($response);
 
             return $response->getAnswer();
         });

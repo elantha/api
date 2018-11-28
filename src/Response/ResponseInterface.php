@@ -2,38 +2,39 @@
 
 namespace Grizmar\Api\Response;
 
+use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 interface ResponseInterface
 {
-    public function setStatusCode(int $code);
+    public function setStatusCode(int $code): self;
 
     public function getStatusCode(): int;
 
-    public function addHeader(string $key, $values);
+    public function addHeader(string $key, $values): self;
 
-    public function addHeaders(array $headers);
+    public function addHeaders(array $headers): self;
 
     public function getData(): array;
 
-    public function setData(array $data);
+    public function setData(array $data): self;
 
-    public function pushData(array $data);
+    public function pushData(array $data): self;
 
     public function getParam(string $code, $default = null);
 
-    public function setParam(string $code, $value);
+    public function setParam(string $code, $value): self;
 
-    public function addError($code, string $message);
+    public function addError($code, $message): self;
 
-    public function addErrors($code, array $messages);
+    public function addErrors(array $errors): self;
 
     public function hasErrors(): bool;
 
     public function getErrors(): array;
 
-    public function addValidationError(string $code, string $message);
+    public function addValidationError(string $code, $message): self;
 
-    public function addValidationErrors(string $code, array $messages);
+    public function addValidationErrors(array $errors): self;
 
     public function hasValidationErrors(): bool;
 
@@ -41,7 +42,7 @@ interface ResponseInterface
 
     public function isValid(): bool;
 
-    public function getAnswer();
+    public function getAnswer(): HttpResponse;
 
     public function getMap(): array;
 }

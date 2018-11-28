@@ -1,10 +1,10 @@
 <?php
 
-namespace Grizmar\Api\Exceptions;
+namespace Grizmar\Api\Http\Exceptions;
 
 use Illuminate\Http\Response;
 
-class ForbiddenException extends BaseException
+class ForbiddenException extends BaseHttpException
 {
     public function getStatusCode(): int
     {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Grizmar\Api\Exceptions;
+namespace Grizmar\Api\Http\Exceptions;
 
 use Illuminate\Http\Response;
 
-class NotFoundException extends BaseException
+class NotFoundException extends BaseHttpException
 {
     public function getStatusCode(): int
     {

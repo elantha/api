@@ -12,5 +12,12 @@
             "email": "grizmar5@gmail.com"
         }
     ],
-    "require": {}
+    "autoload": {
+        "psr-4": {
+            "Grizmar\\Api\\": "src"
+        }
+    },
+    "require": {
+        "spatie/array-to-xml": "^2.7"
+    }
 }

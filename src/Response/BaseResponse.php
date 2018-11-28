@@ -2,6 +2,7 @@
 
 namespace Grizmar\Api\Response;
 
+use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class BaseResponse implements ResponseInterface
@@ -14,28 +15,34 @@ class BaseResponse implements ResponseInterface
 
     protected $status = HttpResponse::HTTP_OK;
 
-    protected $headers = [];
+    /* @var HeaderBag $headers */
+    protected $headers;
+
+    public function __construct()
+    {
+        $this->headers = new HeaderBag();
+    }
 
     public function getData(): array
     {
         return $this->data;
     }
 
-    public function setData(array $data): self
+    public function setData(array $data): ResponseInterface
     {
         $this->data = $data;
 
         return $this;
     }
 
-    public function pushData(array $data): self
+    public function pushData(array $data): ResponseInterface
     {
         $this->data = array_replace_recursive($this->data, $data);
 
         return $this;
     }
 
-    public function setParam(string $code, $value): self
+    public function setParam(string $code, $value): ResponseInterface
     {
         array_set($this->data, $code, $value);
 
@@ -47,30 +54,34 @@ class BaseResponse implements ResponseInterface
         return array_get($this->data, $code, $default);
     }
 
-    final public function addError($code, string $message): self
+    final public function addError($code, $message): ResponseInterface
     {
         $this->errors[$code] = $message;
 
         return $this;
     }
 
-    final public function addErrors($code, array $messages): self
+    final public function addErrors(array $errors): ResponseInterface
     {
-        $this->errors[$code] = $messages;
+        foreach ($errors as $code => $message) {
+            $this->addError($code, $message);
+        }
 
         return $this;
     }
 
-    final public function addValidationError(string $code, string $message): self
+    final public function addValidationError(string $code, $message): ResponseInterface
     {
-        $this->validationErrors[$code][] = $message;
+        $this->validationErrors[$code] = $message;
 
         return $this;
     }
 
-    final public function addValidationErrors(string $code, array $messages): self
+    final public function addValidationErrors(array $errors): ResponseInterface
     {
-        $this->validationErrors[$code] = $messages;
+        foreach ($errors as $code => $message) {
+            $this->addValidationError($code, $message);
+        }
 
         return $this;
     }
@@ -100,23 +111,21 @@ class BaseResponse implements ResponseInterface
         return $this->status;
     }
 
-    final public function setStatusCode(int $code): self
+    final public function setStatusCode(int $code): ResponseInterface
     {
         $this->status = $code;
 
         return $this;
     }
 
-    final public function addHeader(string $key, $value): self
+    final public function addHeader(string $key, $value): ResponseInterface
     {
-        if (!empty($key)) {
-            $this->headers[$key] = $value;
-        }
+        $this->headers->set($key, $value);
 
         return $this;
     }
 
-    final public function addHeaders(array $headers): self
+    final public function addHeaders(array $headers): ResponseInterface
     {
         foreach ($headers as $key => $value) {
             $this->addHeader($key, $value);
@@ -130,15 +139,10 @@ class BaseResponse implements ResponseInterface
         return !$this->hasErrors() && !$this->hasValidationErrors();
     }
 
-    public function getAnswer()
+    public function getAnswer(): HttpResponse
     {
-        $response = \response($this->getMap(), $this->getStatusCode());
-
-        if (!empty($this->headers)) {
-            $response->withHeaders($this->headers);
-        }
-
-        return $response;
+        return \response($this->getMap(), $this->getStatusCode())
+            ->withHeaders($this->headers);
     }
 
     public function getMap(): array

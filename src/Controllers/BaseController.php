@@ -8,16 +8,16 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Grizmar\Api\Response\ResponseInterface;
-use Grizmar\Api\Validators\RequestValidator;
 use Grizmar\Api\Log\LoggerInterface;
 
 class BaseController extends Controller
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, RequestValidator;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     protected $response;
     protected $request;
     protected $logger;
+    protected $validationRules = [];
 
     final public function __construct(
         Request $request,
@@ -30,28 +30,41 @@ class BaseController extends Controller
 
         $this->requestLog();
 
-        $this->initValidationRules();
-
-        $this->validate($request, $this->validationRules);
+        $this->validationRules = $this->initValidationRules();
     }
 
-    final protected function hasErrors(): bool
+    private function requestLog(): void
+    {
+        $this->logger->request($this->request);
+    }
+
+    protected function initValidationRules(): array
+    {
+        return [];
+    }
+
+    public function callAction($method, $parameters)
+    {
+        $this->validate($this->request, $this->validationRules[$method] ?? []);
+
+        return parent::callAction($method, $parameters);
+    }
+
+    protected function hasErrors(): bool
     {
         return $this->response->isValid();
     }
 
-    final protected function input($key, $default = null)
+    protected function input($key, $default = null)
     {
         return $this->request->input($key, $default);
     }
 
-    protected function initValidationRules(): self
+    protected function output($key, $value): self
     {
-    }
+        $this->response->setParam($key, $value);
 
-    protected function requestLog(): void
-    {
-        $this->logger->request($this->request);
+        return $this;
     }
 
     protected function log($level, string $message, array $context = [])

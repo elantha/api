@@ -2,6 +2,7 @@
 
 namespace Grizmar\Api\Messages;
 
+use Grizmar\Api\Exceptions\ApiException;
 
 class Message
 {
@@ -11,7 +12,7 @@ class Message
     public function __construct($code, string $text)
     {
         if (empty($text)) {
-            throw new \Exception('Empty message text');
+            throw new ApiException('Empty message text');
         }
 
         $this->code = $code;
