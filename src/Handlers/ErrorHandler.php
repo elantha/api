@@ -53,8 +53,7 @@ class ErrorHandler implements HandlerInterface
 
             $response->setStatusCode($e->getStatusCode());
 
-            if ($e->getMessage())
-            {
+            if ($e->getMessage()) {
                 $response->addError($e->getCode(), $e->getMessage());
             }
         }
