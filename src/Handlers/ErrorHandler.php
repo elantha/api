@@ -50,9 +50,12 @@ class ErrorHandler implements HandlerInterface
         $response = $e->getResponse();
 
         if (!($e instanceof EmptyException)) {
-            $response
-                ->addError($e->getCode(), $e->getMessage())
-                ->setStatusCode($e->getStatusCode());
+
+            $response->setStatusCode($e->getStatusCode());
+
+            if ($e->getMessage()) {
+                $response->addError($e->getCode(), $e->getMessage());
+            }
         }
 
         return $response;

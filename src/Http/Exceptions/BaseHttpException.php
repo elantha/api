@@ -23,6 +23,13 @@ abstract class BaseHttpException extends ApiException
         return new static($message, $code);
     }
 
+    public function withoutMessage(): self
+    {
+        $this->message = '';
+
+        return $this;
+    }
+
     public function setResponse(ResponseInterface $response): self
     {
         $this->response = $response;

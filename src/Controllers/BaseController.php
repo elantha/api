@@ -67,6 +67,13 @@ class BaseController extends Controller
         return $this;
     }
 
+    protected function error($code, $message): self
+    {
+        $this->response->addError($code, $message);
+
+        return $this;
+    }
+
     protected function log($level, string $message, array $context = [])
     {
         return $this->logger->log($level, $message, $context);
