@@ -4,6 +4,8 @@ namespace Elantha\Api\Tests;
 
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class BaseApiTestCase extends TestCase
 {
@@ -36,16 +38,22 @@ class BaseApiTestCase extends TestCase
     protected function setUpRoutes()
     {
         /** @var \Illuminate\Routing\Router $router */
-        $router  = $this->app['router'];
+        $router = $this->app['router'];
 
-        $class   = new \ReflectionClass(Controllers\TestController::class);
+        $class = new \ReflectionClass(Controllers\TestController::class);
         $methods = $class->getMethods(\ReflectionMethod::IS_PUBLIC);
 
-        foreach ($methods as $method)
-        {
+        foreach ($methods as $method) {
             if (Str::is('test*', $method->getName())) {
                 $router->post('test/' . $method->getName(), $class->getName() . '@' . $method->getName());
             }
         }
+    }
+
+    protected function invokeRequest(string $sourceUrl, array $params = []): Response
+    {
+        $request = Request::create('test/' . $sourceUrl, 'POST', $params);
+
+        return $this->app->handle($request);
     }
 }
