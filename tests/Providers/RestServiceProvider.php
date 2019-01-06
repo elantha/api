@@ -1,15 +1,15 @@
 <?php
 
-namespace Grizmar\Api\Tests\Providers;
+namespace Elantha\Api\Tests\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Grizmar\Api\Messages\KeeperInterface;
-use Grizmar\Api\Tests\Errors\ErrorCollection;
+use Elantha\Api\Messages\KeeperInterface;
+use Elantha\Api\Tests\Errors\ErrorCollection;
 
 /**
  * Class RestServiceProvider
  * Service provider example
- * @package Grizmar\Api\Tests\Providers
+ * @package Elantha\Api\Tests\Providers
  */
 class RestServiceProvider extends ServiceProvider
 {

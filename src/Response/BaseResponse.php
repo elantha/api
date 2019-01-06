@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Response;
+namespace Elantha\Api\Response;
 
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;

@@ -1,14 +1,14 @@
 <?php
 
-namespace Grizmar\Api\Handlers;
+namespace Elantha\Api\Handlers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
-use Grizmar\Api\Response\ResponseInterface;
-use Grizmar\Api\Http\Exceptions\BaseHttpException;
-use Grizmar\Api\Http\Exceptions\EmptyException;
-use Grizmar\Api\Log\LoggerInterface;
+use Elantha\Api\Response\ResponseInterface;
+use Elantha\Api\Http\Exceptions\BaseHttpException;
+use Elantha\Api\Http\Exceptions\EmptyException;
+use Elantha\Api\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ErrorHandler implements HandlerInterface

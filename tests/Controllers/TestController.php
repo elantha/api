@@ -1,13 +1,13 @@
 <?php
 
-namespace Grizmar\Api\Tests\Controllers;
+namespace Elantha\Api\Tests\Controllers;
 
-use Grizmar\Api\Controllers\BaseController;
-use Grizmar\Api\Exceptions\ApiException;
-use Grizmar\Api\Http\Exceptions\EmptyException;
-use Grizmar\Api\Http\Exceptions\ForbiddenException;
-use Grizmar\Api\Http\Exceptions\NotFoundException;
-use Grizmar\Api\Tests\Errors\CodeRegistry;
+use Elantha\Api\Controllers\BaseController;
+use Elantha\Api\Exceptions\ApiException;
+use Elantha\Api\Http\Exceptions\EmptyException;
+use Elantha\Api\Http\Exceptions\ForbiddenException;
+use Elantha\Api\Http\Exceptions\NotFoundException;
+use Elantha\Api\Tests\Errors\CodeRegistry;
 
 class TestController extends BaseController
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace Grizmar\Api\Log;
+namespace Elantha\Api\Log;
 
-use Grizmar\Api\Response\JsonResponse;
-use Grizmar\Api\Response\ResponseInterface;
+use Elantha\Api\Response\JsonResponse;
+use Elantha\Api\Response\ResponseInterface;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Monolog\Logger as MonologLogger;

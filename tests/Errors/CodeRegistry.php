@@ -1,11 +1,11 @@
 <?php
 
-namespace Grizmar\Api\Tests\Errors;
+namespace Elantha\Api\Tests\Errors;
 
 /**
  * Class CodeRegistry
  * Example class for api codes
- * @package Grizmar\Api\Tests\Errors
+ * @package Elantha\Api\Tests\Errors
  */
 class CodeRegistry
 {

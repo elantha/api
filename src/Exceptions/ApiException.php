@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Exceptions;
+namespace Elantha\Api\Exceptions;
 
 
 class ApiException extends \Exception

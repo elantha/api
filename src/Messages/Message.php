@@ -1,8 +1,8 @@
 <?php
 
-namespace Grizmar\Api\Messages;
+namespace Elantha\Api\Messages;
 
-use Grizmar\Api\Exceptions\ApiException;
+use Elantha\Api\Exceptions\ApiException;
 
 class Message
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Http\Exceptions;
+namespace Elantha\Api\Http\Exceptions;
 
 use Illuminate\Http\Response;
 

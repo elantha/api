@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Tests;
+namespace Elantha\Api\Tests;
 
 use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
@@ -13,7 +13,7 @@ class BaseApiTestCase extends TestCase
     protected function getPackageProviders($app): array
     {
         return [
-            \Grizmar\Api\Providers\ApiServiceProvider::class,
+            \Elantha\Api\Providers\ApiServiceProvider::class,
             Providers\RestServiceProvider::class,
         ];
     }

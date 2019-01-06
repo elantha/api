@@ -1,10 +1,10 @@
 <?php
 
-namespace Grizmar\Api\Http\Exceptions;
+namespace Elantha\Api\Http\Exceptions;
 
-use Grizmar\Api\Exceptions\ApiException;
-use Grizmar\Api\Messages\KeeperInterface;
-use Grizmar\Api\Response\ResponseInterface;
+use Elantha\Api\Exceptions\ApiException;
+use Elantha\Api\Messages\KeeperInterface;
+use Elantha\Api\Response\ResponseInterface;
 
 abstract class BaseHttpException extends ApiException
 {

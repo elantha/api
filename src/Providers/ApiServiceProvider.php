@@ -1,19 +1,19 @@
 <?php
 
-namespace Grizmar\Api\Providers;
+namespace Elantha\Api\Providers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
-use Grizmar\Api\Response\ResponseInterface;
-use Grizmar\Api\Response\JsonResponse;
-use Grizmar\Api\Log\LoggerInterface;
-use Grizmar\Api\Log\Logger;
-use Grizmar\Api\Log\AccessLogger;
-use Grizmar\Api\Messages\KeeperInterface;
-use Grizmar\Api\Messages\Keeper;
-use Grizmar\Api\Handlers\ErrorHandler;
-use Grizmar\Api\Handlers\HandlerInterface;
+use Elantha\Api\Response\ResponseInterface;
+use Elantha\Api\Response\JsonResponse;
+use Elantha\Api\Log\LoggerInterface;
+use Elantha\Api\Log\Logger;
+use Elantha\Api\Log\AccessLogger;
+use Elantha\Api\Messages\KeeperInterface;
+use Elantha\Api\Messages\Keeper;
+use Elantha\Api\Handlers\ErrorHandler;
+use Elantha\Api\Handlers\HandlerInterface;
 use Illuminate\Support\Str;
 
 class ApiServiceProvider extends ServiceProvider

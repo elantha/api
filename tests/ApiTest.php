@@ -1,8 +1,8 @@
 <?php
 
-namespace Grizmar\Api\Tests;
+namespace Elantha\Api\Tests;
 
-use Grizmar\Api\Tests\Errors\CodeRegistry;
+use Elantha\Api\Tests\Errors\CodeRegistry;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;

@@ -1,14 +1,14 @@
 <?php
 
-namespace Grizmar\Api\Tests\Exceptions;
+namespace Elantha\Api\Tests\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Grizmar\Api\Handlers\HandlerInterface;
+use Elantha\Api\Handlers\HandlerInterface;
 
 /**
  * Class Handler
  * Error handler example
- * @package Grizmar\Api\Tests\Exceptions
+ * @package Elantha\Api\Tests\Exceptions
  */
 class Handler extends ExceptionHandler
 {

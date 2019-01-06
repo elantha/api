@@ -7,12 +7,12 @@ return [
     |--------------------------------------------------------------------------
     |
     | Response types as 'Content-Type' => Response type handler
-    | NOTE: Response handler must implement \Grizmar\Api\Response\ResponseInterface
+    | NOTE: Response handler must implement \Elantha\Api\Response\ResponseInterface
     */
 
     'response_types' => [
-        'application/xml' => \Grizmar\Api\Response\XmlResponse::class,
-        'default' => \Grizmar\Api\Response\JsonResponse::class,
+        'application/xml' => \Elantha\Api\Response\XmlResponse::class,
+        'default' => \Elantha\Api\Response\JsonResponse::class,
     ],
 
     /*
@@ -26,7 +26,7 @@ return [
 
     'log' => env('API_LOG', false),
 
-    'logger_handler' => \Grizmar\Api\Log\AccessLogger::class,
+    'logger_handler' => \Elantha\Api\Log\AccessLogger::class,
 
     'request_format' => '{unique_id}][request][{method}][{url}][{body}',
 
@@ -37,7 +37,7 @@ return [
     | Error handling Configuration
     |--------------------------------------------------------------------------
     |
-    | NOTE: Handler must implement \Grizmar\Api\Handlers\HandlerInterface
+    | NOTE: Handler must implement \Elantha\Api\Handlers\HandlerInterface
     */
-    'error_handler' => \Grizmar\Api\Handlers\ErrorHandler::class,
+    'error_handler' => \Elantha\Api\Handlers\ErrorHandler::class,
 ];

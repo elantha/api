@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Middleware;
+namespace Elantha\Api\Middleware;
 
 use \Illuminate\Http\Request;
 
