@@ -2,9 +2,9 @@
 
 namespace Elantha\Api\Tests;
 
-use Illuminate\Support\Str;
 use Orchestra\Testbench\TestCase;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class BaseApiTestCase extends TestCase
@@ -16,12 +16,18 @@ class BaseApiTestCase extends TestCase
     {
         return [
             \Elantha\Api\Providers\ApiServiceProvider::class,
-            Providers\RestServiceProvider::class,
         ];
     }
 
     protected function getEnvironmentSetUp($app)
     {
+        /** @var \Illuminate\Config\Repository $config */
+        $config = $app['config'];
+
+        $config->set('api.message_collections', [
+            Errors\ErrorCollection::class,
+        ]);
+
         $app->singleton(
             \Illuminate\Contracts\Debug\ExceptionHandler::class,
             Exceptions\Handler::class

@@ -2,19 +2,21 @@
 
 namespace Elantha\Api\Providers;
 
+use Elantha\Api\Exceptions\ApiException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Elantha\Api\Response\ResponseInterface;
 use Elantha\Api\Response\JsonResponse;
 use Elantha\Api\Log\LoggerInterface;
 use Elantha\Api\Log\Logger;
 use Elantha\Api\Log\AccessLogger;
+use Elantha\Api\Messages\CollectionInterface;
 use Elantha\Api\Messages\KeeperInterface;
 use Elantha\Api\Messages\Keeper;
 use Elantha\Api\Handlers\ErrorHandler;
 use Elantha\Api\Handlers\HandlerInterface;
-use Illuminate\Support\Str;
 
 class ApiServiceProvider extends ServiceProvider
 {
@@ -39,6 +41,8 @@ class ApiServiceProvider extends ServiceProvider
         $this->bindMessageKeeper();
 
         $this->registerResponseMacro();
+
+        $this->initMessageCollections();
     }
 
     /**
@@ -104,8 +108,7 @@ class ApiServiceProvider extends ServiceProvider
             /* @var ResponseInterface $response */
             if ($data instanceof ResponseInterface) {
                 $response = $data;
-            }
-            else {
+            } else {
                 $response = resolve(ResponseInterface::class);
                 $response->setData($data);
             }
@@ -120,5 +123,20 @@ class ApiServiceProvider extends ServiceProvider
 
             return $response->getAnswer();
         });
+    }
+
+    private function initMessageCollections()
+    {
+        $messageCollections = (array) config('api.message_collections', []);
+
+        /** @var KeeperInterface $keeper */
+        $keeper = resolve(KeeperInterface::class);
+
+        foreach ($messageCollections as $className) {
+
+            if (is_subclass_of($className, CollectionInterface::class)) {
+                $keeper->load(new $className());
+            }
+        }
     }
 }

@@ -3,6 +3,17 @@
 return [
     /*
     |--------------------------------------------------------------------------
+    | Messages and collections
+    |--------------------------------------------------------------------------
+    |
+    | NOTE: Collections must implement \Elantha\Api\Messages\CollectionInterface
+    | convenient way is to extend \Elantha\Api\Messages\BaseCollection
+    */
+
+    'message_collections' => [],
+
+    /*
+    |--------------------------------------------------------------------------
     | Response Configuration
     |--------------------------------------------------------------------------
     |
