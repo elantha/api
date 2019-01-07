@@ -27,7 +27,7 @@
         }
     },
     "require": {
-        "php": ">=7.2.0",
+        "php": ">=7.1.0",
         "spatie/array-to-xml": "^2.7"
     },
     "require-dev": {

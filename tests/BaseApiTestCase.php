@@ -19,7 +19,7 @@ class BaseApiTestCase extends TestCase
         ];
     }
 
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app): void
     {
         /** @var \Illuminate\Config\Repository $config */
         $config = $app['config'];
@@ -34,14 +34,14 @@ class BaseApiTestCase extends TestCase
         );
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->setUpRoutes();
     }
 
-    protected function setUpRoutes()
+    protected function setUpRoutes(): void
     {
         /** @var \Illuminate\Routing\Router $router */
         $router = $this->app['router'];

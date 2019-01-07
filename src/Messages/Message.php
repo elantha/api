@@ -9,17 +9,17 @@ class Message
     private $code;
     private $text;
 
-    public function __construct($code, string $text)
+    public function __construct(string $code, string $text)
     {
         if (empty($text)) {
-            throw new ApiException('Empty message text');
+            throw new ApiException('Message text is not specified!');
         }
 
         $this->code = $code;
         $this->text = $text;
     }
 
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }

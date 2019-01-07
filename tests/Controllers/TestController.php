@@ -34,7 +34,7 @@ class TestController extends BaseController
         return \response()->rest($this->response);
     }
 
-    public function testExceptionWithResponse()
+    public function testExceptionWithResponse(): void
     {
         $this->response->setData(['info' => ['one' => 'value']]);
 
@@ -43,19 +43,19 @@ class TestController extends BaseController
         throw ForbiddenException::make()->setResponse($this->response);
     }
 
-    public function testEmptyException()
+    public function testEmptyException(): void
     {
         $this->output('param', 'value');
 
         throw EmptyException::make()->setResponse($this->response);
     }
 
-    public function testExceptionErrors()
+    public function testExceptionErrors(): void
     {
         throw NotFoundException::make(CodeRegistry::USER_NOT_FOUND, ['name' => 'Jack']);
     }
 
-    public function testCustomErrors()
+    public function testCustomAdditionalErrors(): void
     {
         $this->error(CodeRegistry::USER_NOT_FOUND, 'User not found');
         $this->error(100, 'Custom error');
@@ -65,7 +65,17 @@ class TestController extends BaseController
             ->setResponse($this->response);
     }
 
-    public function testValidationErrors()
+    public function testResolvedAdditionalErrors(): void
+    {
+        $this->error(CodeRegistry::USER_NOT_FOUND, null, ['name' => 'Jack']);
+        $this->error(100, null);
+
+        throw NotFoundException::make()
+            ->withoutMessage()
+            ->setResponse($this->response);
+    }
+
+    public function testValidationErrors(): void
     {
         throw new ApiException('This method should not be called!');
     }

@@ -24,7 +24,7 @@ interface ResponseInterface
 
     public function setParam(string $code, $value): self;
 
-    public function addError($code, $message): self;
+    public function addError(string $code, ?string $message = null, array $context = []): self;
 
     public function addErrors(array $errors): self;
 
