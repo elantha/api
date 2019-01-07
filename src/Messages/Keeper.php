@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Messages;
+namespace Elantha\Api\Messages;
 
 
 class Keeper implements KeeperInterface

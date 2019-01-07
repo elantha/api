@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Handlers;
+namespace Elantha\Api\Handlers;
 
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;

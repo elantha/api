@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Http\Exceptions;
+namespace Elantha\Api\Http\Exceptions;
 
 
 class EmptyException extends BaseHttpException

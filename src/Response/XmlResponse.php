@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Response;
+namespace Elantha\Api\Response;
 
 use Spatie\ArrayToXml\ArrayToXml;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;

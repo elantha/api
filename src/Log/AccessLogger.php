@@ -1,6 +1,6 @@
 <?php
 
-namespace Grizmar\Api\Log;
+namespace Elantha\Api\Log;
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;

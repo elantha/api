@@ -1,15 +1,15 @@
 <?php
 
-namespace Grizmar\Api\Messages;
+namespace Elantha\Api\Messages;
 
 
-abstract class BaseCollection
+abstract class BaseCollection implements CollectionInterface
 {
     private $messages = [];
 
     abstract public function init();
 
-    final public function addMessages(array $messages): self
+    public function addMessages(array $messages): self
     {
         foreach ($messages as $code => $message) {
 
@@ -23,14 +23,14 @@ abstract class BaseCollection
         return $this;
     }
 
-    final public function addMessage($code, string $text): self
+    public function addMessage($code, string $text): self
     {
         $this->pushMessage(new Message($code, $text));
 
         return $this;
     }
 
-    final public function pushMessage(Message $message): self
+    public function pushMessage(Message $message): self
     {
         array_set($this->messages, $message->getCode(), $message);
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace Grizmar\Api\Log;
+namespace Elantha\Api\Log;
 
 use Illuminate\Http\Request;
-use Grizmar\Api\Response\ResponseInterface;
+use Elantha\Api\Response\ResponseInterface;
 use Psr\Log\LoggerInterface as PsrLoggerInterface;
 
 interface LoggerInterface extends PsrLoggerInterface

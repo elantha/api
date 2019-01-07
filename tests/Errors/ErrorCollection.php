@@ -1,13 +1,13 @@
 <?php
 
-namespace Grizmar\Api\Tests\Errors;
+namespace Elantha\Api\Tests\Errors;
 
-use Grizmar\Api\Messages\BaseCollection;
+use Elantha\Api\Messages\BaseCollection;
 
 /**
  * Class ErrorCollection
  * Error collection example
- * @package Grizmar\Api\Tests\Errors
+ * @package Elantha\Api\Tests\Errors
  */
 class ErrorCollection extends BaseCollection
 {

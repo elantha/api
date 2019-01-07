@@ -1,8 +1,8 @@
 {
-    "name": "grizmar/api",
+    "name": "elantha/api",
     "extra": {
         "installer-paths": {
-            "packages/{$name}": ["grizmar/api"]
+            "packages/{$name}": ["elantha/api"]
         }
     },
     "description": "rest api",
@@ -10,16 +10,20 @@
         {
             "name": "grizmar",
             "email": "grizmar5@gmail.com"
+        },
+        {
+          "name": "solravn",
+          "email": "elanthes@gmail.com"
         }
     ],
     "autoload": {
         "psr-4": {
-            "Grizmar\\Api\\": "src"
+            "Elantha\\Api\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Grizmar\\Api\\Tests\\": "tests"
+            "Elantha\\Api\\Tests\\": "tests"
         }
     },
     "require": {

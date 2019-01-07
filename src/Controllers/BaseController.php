@@ -1,14 +1,14 @@
 <?php
 
-namespace Grizmar\Api\Controllers;
+namespace Elantha\Api\Controllers;
 
 use Illuminate\Routing\Controller;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
-use Grizmar\Api\Response\ResponseInterface;
-use Grizmar\Api\Log\LoggerInterface;
+use Elantha\Api\Response\ResponseInterface;
+use Elantha\Api\Log\LoggerInterface;
 
 class BaseController extends Controller
 {
