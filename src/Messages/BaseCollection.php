@@ -7,7 +7,7 @@ abstract class BaseCollection implements CollectionInterface
 {
     private $messages = [];
 
-    abstract public function init();
+    abstract public function init(): void;
 
     public function addMessages(array $messages): self
     {
@@ -23,7 +23,7 @@ abstract class BaseCollection implements CollectionInterface
         return $this;
     }
 
-    public function addMessage($code, string $text): self
+    public function addMessage(string $code, string $text): self
     {
         $this->pushMessage(new Message($code, $text));
 

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Elantha\Api\Response\ResponseInterface;
 use Elantha\Api\Log\LoggerInterface;
 
@@ -23,7 +24,7 @@ class BaseController extends Controller
         Request $request,
         ResponseInterface $response,
         LoggerInterface $logger
-    ){
+    ) {
         $this->response = $response;
         $this->request = $request;
         $this->logger = $logger;
@@ -43,7 +44,7 @@ class BaseController extends Controller
         return [];
     }
 
-    public function callAction($method, $parameters)
+    public function callAction($method, $parameters): Response
     {
         $this->validate($this->request, $this->validationRules[$method] ?? []);
 
@@ -67,15 +68,15 @@ class BaseController extends Controller
         return $this;
     }
 
-    protected function error($code, $message): self
+    protected function error(string $code, ?string $message = null, array $context = []): self
     {
-        $this->response->addError($code, $message);
+        $this->response->addError($code, $message, $context);
 
         return $this;
     }
 
-    protected function log($level, string $message, array $context = [])
+    protected function log($level, string $message, array $context = []): void
     {
-        return $this->logger->log($level, $message, $context);
+        $this->logger->log($level, $message, $context);
     }
 }

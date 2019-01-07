@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class XmlResponse extends BaseResponse
 {
-    const CONTENT_TYPE = 'application/xml';
+    public const CONTENT_TYPE = 'application/xml';
 
     public function __construct()
     {

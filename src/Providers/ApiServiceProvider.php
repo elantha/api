@@ -26,7 +26,7 @@ class ApiServiceProvider extends ServiceProvider
      * @param Request $request
      * @return void
      */
-    public function boot(Request $request)
+    public function boot(Request $request): void
     {
         $this->publishes([
             __DIR__.'/../../config/api.php' => config_path('api.php'),
@@ -50,7 +50,7 @@ class ApiServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
 
     }
@@ -79,14 +79,14 @@ class ApiServiceProvider extends ServiceProvider
         $this->app->bind(ResponseInterface::class, $handlerName);
     }
 
-    private function bindErrorHandler()
+    private function bindErrorHandler(): void
     {
         $handlerName = config('api.error_handler', ErrorHandler::class);
 
         $this->app->bind(HandlerInterface::class, $handlerName);
     }
 
-    private function bindLogger()
+    private function bindLogger(): void
     {
         $this->app->singleton(LoggerInterface::class, function ($app) {
 
@@ -96,12 +96,12 @@ class ApiServiceProvider extends ServiceProvider
         });
     }
 
-    private function bindMessageKeeper()
+    private function bindMessageKeeper(): void
     {
         $this->app->singleton(KeeperInterface::class, Keeper::class);
     }
 
-    private function registerResponseMacro()
+    private function registerResponseMacro(): void
     {
         Response::macro('rest', function ($data, $status = false) {
 
@@ -125,7 +125,7 @@ class ApiServiceProvider extends ServiceProvider
         });
     }
 
-    private function initMessageCollections()
+    private function initMessageCollections(): void
     {
         $messageCollections = (array) config('api.message_collections', []);
 

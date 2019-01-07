@@ -16,9 +16,9 @@ class Keeper implements KeeperInterface
         return $this;
     }
 
-    public function getMessage($code, array $context = [])
+    public function getMessage($code, array $context = []): ?string
     {
-        $result = '';
+        $result = null;
 
         $message = array_get($this->messages, $code);
 

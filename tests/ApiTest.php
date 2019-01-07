@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiTest extends BaseApiTestCase
 {
-    public function testResponseContent()
+    public function testResponseContent(): void
     {
         // given and when
         $response = $this->invokeRequest(__FUNCTION__);
@@ -36,7 +36,7 @@ class ApiTest extends BaseApiTestCase
         $this->assertEquals($testData, $responseBody['data']);
     }
 
-    public function testExceptionWithResponse()
+    public function testExceptionWithResponse(): void
     {
         // given and when
         $response = $this->invokeRequest(__FUNCTION__);
@@ -62,7 +62,7 @@ class ApiTest extends BaseApiTestCase
         $this->assertEquals($testData, $responseBody['data']);
     }
 
-    public function testEmptyException()
+    public function testEmptyException(): void
     {
         // given and when
         $response = $this->invokeRequest(__FUNCTION__);
@@ -81,7 +81,7 @@ class ApiTest extends BaseApiTestCase
         $this->assertEquals(['param' => 'value'], $responseBody['data']);
     }
 
-    public function testExceptionErrors()
+    public function testExceptionErrors(): void
     {
         // given and when
         $response = $this->invokeRequest(__FUNCTION__);
@@ -101,7 +101,7 @@ class ApiTest extends BaseApiTestCase
         $this->assertEquals([], $responseBody['validation_errors']);
     }
 
-    public function testCustomErrors()
+    public function testCustomAdditionalErrors(): void
     {
         // given and when
         $response = $this->invokeRequest(__FUNCTION__);
@@ -122,7 +122,28 @@ class ApiTest extends BaseApiTestCase
         $this->assertEquals([], $responseBody['validation_errors']);
     }
 
-    public function testValidationErrors()
+    public function testResolvedAdditionalErrors(): void
+    {
+        // given and when
+        $response = $this->invokeRequest(__FUNCTION__);
+
+        // then
+        $this->assertInstanceOf(JsonResponse::class, $response);
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+
+        $responseBody = json_decode($response->getContent(), true);
+
+        $this->assertNotEmpty($responseBody);
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $responseBody['status']);
+
+        $this->assertNotEmpty($responseBody['errors']);
+        $this->assertArraySubset([CodeRegistry::USER_NOT_FOUND => 'User not found: Jack'], $responseBody['errors']);
+        $this->assertArraySubset([100 => 'Sorry, something went wrong!'], $responseBody['errors']);
+
+        $this->assertEquals([], $responseBody['validation_errors']);
+    }
+
+    public function testValidationErrors(): void
     {
         // given and when
         $response = $this->invokeRequest(__FUNCTION__, ['one' => 'Winston']);
@@ -149,7 +170,7 @@ class ApiTest extends BaseApiTestCase
         $this->assertEquals([], $responseBody['data']);
     }
 
-    public function testValidationRules()
+    public function testValidationRules(): void
     {
         // given and when
         $response = $this->invokeRequest(__FUNCTION__, [

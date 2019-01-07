@@ -11,7 +11,7 @@ use Elantha\Api\Messages\BaseCollection;
  */
 class ErrorCollection extends BaseCollection
 {
-    public function init()
+    public function init(): void
     {
         $this->addMessages([
             'default'                    => 'Sorry, something went wrong!',

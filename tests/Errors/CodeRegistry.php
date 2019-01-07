@@ -9,6 +9,6 @@ namespace Elantha\Api\Tests\Errors;
  */
 class CodeRegistry
 {
-    const USER_NOT_FOUND = 1000;
-    const ACCESS_DENIED = 1001;
+    public const USER_NOT_FOUND = 1000;
+    public const ACCESS_DENIED = 1001;
 }

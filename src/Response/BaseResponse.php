@@ -2,6 +2,7 @@
 
 namespace Elantha\Api\Response;
 
+use Elantha\Api\Messages\KeeperInterface;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
@@ -54,14 +55,20 @@ class BaseResponse implements ResponseInterface
         return array_get($this->data, $code, $default);
     }
 
-    final public function addError($code, $message): ResponseInterface
+    public function addError(string $code, ?string $message = null, array $context = []): ResponseInterface
     {
+        if (null === $message) {
+            /** @var KeeperInterface $keeper */
+            $keeper = resolve(KeeperInterface::class);
+            $message = $keeper->getMessage($code, $context);
+        }
+        
         $this->errors[$code] = $message;
 
         return $this;
     }
 
-    final public function addErrors(array $errors): ResponseInterface
+    public function addErrors(array $errors): ResponseInterface
     {
         foreach ($errors as $code => $message) {
             $this->addError($code, $message);
@@ -70,14 +77,14 @@ class BaseResponse implements ResponseInterface
         return $this;
     }
 
-    final public function addValidationError(string $code, $message): ResponseInterface
+    public function addValidationError(string $code, $message): ResponseInterface
     {
         $this->validationErrors[$code] = $message;
 
         return $this;
     }
 
-    final public function addValidationErrors(array $errors): ResponseInterface
+    public function addValidationErrors(array $errors): ResponseInterface
     {
         foreach ($errors as $code => $message) {
             $this->addValidationError($code, $message);
@@ -86,12 +93,12 @@ class BaseResponse implements ResponseInterface
         return $this;
     }
 
-    final public function getValidationErrors(): array
+    public function getValidationErrors(): array
     {
         return $this->validationErrors;
     }
 
-    final public function getErrors(): array
+    public function getErrors(): array
     {
         return $this->errors;
     }
@@ -106,26 +113,26 @@ class BaseResponse implements ResponseInterface
         return !empty($this->validationErrors);
     }
 
-    final public function getStatusCode(): int
+    public function getStatusCode(): int
     {
         return $this->status;
     }
 
-    final public function setStatusCode(int $code): ResponseInterface
+    public function setStatusCode(int $code): ResponseInterface
     {
         $this->status = $code;
 
         return $this;
     }
 
-    final public function addHeader(string $key, $value): ResponseInterface
+    public function addHeader(string $key, $value): ResponseInterface
     {
         $this->headers->set($key, $value);
 
         return $this;
     }
 
-    final public function addHeaders(array $headers): ResponseInterface
+    public function addHeaders(array $headers): ResponseInterface
     {
         foreach ($headers as $key => $value) {
             $this->addHeader($key, $value);
@@ -134,7 +141,7 @@ class BaseResponse implements ResponseInterface
         return $this;
     }
 
-    final public function isValid(): bool
+    public function isValid(): bool
     {
         return !$this->hasErrors() && !$this->hasValidationErrors();
     }
