@@ -8,17 +8,15 @@ use Psr\Log\LoggerInterface as PsrLoggerInterface;
 
 interface LoggerInterface extends PsrLoggerInterface
 {
-    public function addContext(array $context = []): self;
+    public function setContext(array $context = []): self;
 
-    public function setContextParam($name, $value): self;
+    public function setContextParam(string $name, $value): self;
 
     public function getContext(): array;
 
-    public function getContextParam($name, $default = null);
+    public function getContextParam(string $name, $default = null);
 
-    public function internal(string $text): self;
+    public function logRequest(Request $request): void;
 
-    public function request(Request $request): void;
-
-    public function answer(ResponseInterface $response): void;
+    public function logAnswer(ResponseInterface $response): void;
 }

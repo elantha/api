@@ -29,19 +29,9 @@ class BaseController extends Controller
         $this->request = $request;
         $this->logger = $logger;
 
-        $this->requestLog();
+        $this->logRequest();
 
         $this->validationRules = $this->initValidationRules();
-    }
-
-    private function requestLog(): void
-    {
-        $this->logger->request($this->request);
-    }
-
-    protected function initValidationRules(): array
-    {
-        return [];
     }
 
     public function callAction($method, $parameters): Response
@@ -49,6 +39,16 @@ class BaseController extends Controller
         $this->validate($this->request, $this->validationRules[$method] ?? []);
 
         return parent::callAction($method, $parameters);
+    }
+
+    protected function logRequest(): void
+    {
+        $this->logger->logRequest($this->request);
+    }
+
+    protected function initValidationRules(): array
+    {
+        return [];
     }
 
     protected function hasErrors(): bool

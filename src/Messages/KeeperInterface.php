@@ -7,5 +7,5 @@ interface KeeperInterface
 {
     public function load(BaseCollection $collection): self;
 
-    public function getMessage($code, array $context = []);
+    public function getMessage($code, array $context = []): ?string;
 }
