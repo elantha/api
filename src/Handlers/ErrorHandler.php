@@ -90,13 +90,13 @@ class ErrorHandler implements HandlerInterface
         /* @var LoggerInterface $logger */
         $logger = resolve(LoggerInterface::class);
 
-        $logger->addContext([
+        $logger->setContext([
             'internal_code' => $e->getCode(),
             'internal_text' => $e->getMessage(),
         ]);
 
         if ($request) {
-            $logger->request($request);
+            $logger->logRequest($request);
         }
     }
 }

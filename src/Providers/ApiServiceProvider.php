@@ -2,7 +2,6 @@
 
 namespace Elantha\Api\Providers;
 
-use Elantha\Api\Exceptions\ApiException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
@@ -11,7 +10,6 @@ use Elantha\Api\Response\ResponseInterface;
 use Elantha\Api\Response\JsonResponse;
 use Elantha\Api\Log\LoggerInterface;
 use Elantha\Api\Log\Logger;
-use Elantha\Api\Log\AccessLogger;
 use Elantha\Api\Messages\CollectionInterface;
 use Elantha\Api\Messages\KeeperInterface;
 use Elantha\Api\Messages\Keeper;
@@ -90,15 +88,20 @@ class ApiServiceProvider extends ServiceProvider
     {
         $this->app->singleton(LoggerInterface::class, function ($app) {
 
-            $handler = config('api.logger_handler', AccessLogger::class);
+            $logger = config('api.logger_handler', Logger::class);
 
-            return new Logger(new $handler('api'));
+            return new $logger();
         });
     }
 
     private function bindMessageKeeper(): void
     {
-        $this->app->singleton(KeeperInterface::class, Keeper::class);
+        $this->app->singleton(KeeperInterface::class, function ($app) {
+
+            $keeper = config('api.message_keeper', Keeper::class);
+
+            return new $keeper();
+        });
     }
 
     private function registerResponseMacro(): void
@@ -119,7 +122,7 @@ class ApiServiceProvider extends ServiceProvider
 
             /* @var LoggerInterface $logger */
             $logger = resolve(LoggerInterface::class);
-            $logger->answer($response);
+            $logger->logAnswer($response);
 
             return $response->getAnswer();
         });
