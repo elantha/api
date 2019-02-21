@@ -98,7 +98,7 @@ class Logger extends MonologLogger implements LoggerInterface
         $this->info(config('api.request_format', ''), $localContext);
     }
 
-    public function logAnswer(ResponseInterface $response): void
+    public function logResponse(ResponseInterface $response): void
     {
         $localContext = [
             'body' => $this->getResponseBody($response),
