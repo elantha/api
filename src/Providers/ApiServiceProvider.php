@@ -122,7 +122,7 @@ class ApiServiceProvider extends ServiceProvider
 
             /* @var LoggerInterface $logger */
             $logger = resolve(LoggerInterface::class);
-            $logger->logAnswer($response);
+            $logger->logResponse($response);
 
             return $response->getAnswer();
         });

@@ -18,5 +18,5 @@ interface LoggerInterface extends PsrLoggerInterface
 
     public function logRequest(Request $request): void;
 
-    public function logAnswer(ResponseInterface $response): void;
+    public function logResponse(ResponseInterface $response): void;
 }

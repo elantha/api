@@ -15,6 +15,13 @@ class ErrorHandler implements HandlerInterface
 {
     public function handle(\Throwable $e, Request $request = null): Response
     {
+        $response = $this->process($e, $request);
+
+        return response()->rest($response);
+    }
+
+    public function process(\Throwable $e, Request $request = null): ResponseInterface
+    {
         if ($e instanceof HttpException) {
             $response = $this->getKernelHttpResponse($e);
             $this->logInternalError($e, $request);
@@ -30,7 +37,7 @@ class ErrorHandler implements HandlerInterface
             $this->logInternalError($e);
         }
 
-        return response()->rest($response);
+        return $response;
     }
 
     protected function getKernelHttpResponse(HttpException $e): ResponseInterface
